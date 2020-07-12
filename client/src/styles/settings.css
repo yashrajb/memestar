@@ -1,0 +1,14 @@
+
+.settings .container {
+               max-width:500px;
+               box-shadow:3px 3px 8px 3px grey;
+               padding:40px;
+               margin-top:40px;
+              
+}
+h3{
+margin:8px 0px;
+}
+input {
+outline:1px solid gray;
+}

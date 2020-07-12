@@ -1,0 +1,58 @@
+.navbar {
+border-radius:0px;
+border:0px;
+background:#016670;
+}
+
+
+
+.navbar-brand,.navbar-brand:hover {
+color:white;
+text-transform:uppercase;
+}
+
+
+.navbar .nav-link a,.navbar-expand-md .navbar-nav .nav-link{
+color:white;
+}
+
+.navbar .dropdown-item {
+               display: block;
+               width: 100%;
+               padding: 0.25rem 1.5rem;
+               clear: both;
+               font-weight: 400;
+               color: white !important;
+               text-align: inherit;
+               white-space: nowrap;
+               background-color: transparent;
+               border: 0;
+}
+
+.navbar-expand-md .navbar-nav .dropdown-menu {
+background-color:#016670;      
+}
+
+.dropdown-divider {
+border-top:1px solid white;
+}
+
+.dropdown-item:focus, .dropdown-item:hover {
+               background-color:#016670 !important;
+}
+
+.navbar-toggler-icon{
+               background:white !important;
+               height:4px !important;
+               display:block !important;
+               margin:5px 0px;
+}
+
+.navbar-toggler {
+               background:transparent;
+               border:1px solid white !important;
+}
+
+.dropdown-item a, .dropdown-item a:hover {
+               color:white;
+}

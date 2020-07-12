@@ -1,0 +1,52 @@
+.dashboard .container {
+  max-width:500px !important;
+}
+.dashboard {
+  padding: 30px 0px;
+}
+
+.dashboard .panel {
+  border: 1px solid white;
+  box-shadow: 3px 3px 3px lightgrey;
+  padding: 20px;
+  border:1px solid lightgrey;
+  max-width:500px !important;
+  margin:30px 0px;
+}
+
+.dashboard .profile-pic {
+  width: 50px;
+  height:55px;
+  border-radius:50px;
+}
+
+.dashboard .username a{
+  color: #016670 !important;
+  margin-left: 10px;
+  text-transform: uppercase;
+}
+
+.dashboard .username a:hover{
+  text-decoration:none;
+}
+
+.dashboard .meme {
+  max-width:350px;
+  margin: 0px auto;
+  display: block;
+  border-width:0px;
+  box-shadow: 3px 3px 3px lightgrey;
+}
+.dashboard .panel .like-section{
+  text-align:center;
+  color:#016670;
+  text-align:center;
+}
+.dashboard .panel .fa.fa-thumbs-up,.fa.fa-thumbs-o-up{
+  font-size:26px;
+}
+.dashboard .like_count {
+  font-size:20px;
+}
+
+

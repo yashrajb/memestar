@@ -1,0 +1,30 @@
+.uploadmeme {
+margin:60px 0px;
+}
+.uploadmeme .container{
+  max-width:500px;
+}
+.uploadmeme h2 {
+border-bottom:2px solid #212529 !important;
+padding:10px 0px;
+text-transform:uppercase;
+}
+
+.uploadmeme .container {
+box-shadow:3px 3px 8px 3px grey;
+padding:30px;
+}
+
+.uploadmeme label {
+color:#212529;
+}
+
+.uploadmeme button {
+  background-color:white;
+  border-radius:0px;
+  color:grey;
+}
+
+.uploadmeme .meme {
+width:300px;
+}

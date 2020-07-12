@@ -1,0 +1,41 @@
+.auth {
+  padding:100px 0px;
+  height:100%;
+  margin-bottom:-900px;
+  text-align:center;
+}
+
+.auth .container{
+  max-width:500px !important;
+}
+
+.auth h1 {
+color:#016670;
+text-shadow:3px 3px 3px lightgrey;
+}
+
+.auth input {
+border:1px solid #016670;
+box-shadow:3px 5px 3px lightgrey;
+border-radius:0px;
+border-color:#016670;
+outline-color:#016670;
+}
+
+
+
+.auth label {
+color:#016670;
+}
+
+.auth .btn-secondary {
+ background-color:#016670;
+ border:0px;
+ outline:0px;
+ border-radius:0px;
+ box-shadow:3px 5px 3px lightgrey;
+}
+
+.auth .btn-secondary:hover {
+  background-color:#016670;
+}
