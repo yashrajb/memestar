@@ -13,6 +13,7 @@ import {
   Container
 } from "reactstrap";
 import { changeDetails, changeProfile } from "../../actions/profile";
+import MemView from "../dashboard/MemeView";
 import { withRouter } from 'react-router-dom';
 import "../../styles/profile.css";
 import SEO from "../../utils/seo";
@@ -27,7 +28,8 @@ class EditProfile extends React.Component {
       disabledBtn:false,
       changeProfilePicBtn:false,
       image: "",
-      error: {}
+      error: {},
+      memes:[]
     };
     this.props = props;
     this.onChange = this.onChange.bind(this);
@@ -221,6 +223,7 @@ class EditProfile extends React.Component {
               </Button>
             </FormGroup>
         </div>
+
       </Container>
       </div>
     );

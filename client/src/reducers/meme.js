@@ -25,6 +25,15 @@ const memeReducer = function(state = initialState, action) {
       meme:memes,
       loading:false
     };
+    case "DELETE_MEME":
+      let newMemes = [
+        ...state.meme.slice(0,action.payload),
+        ...state.meme.slice(action.payload+1)
+      ]
+      return {
+        meme:newMemes,
+        loading:false
+      }
     default:
       return state;
   }

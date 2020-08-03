@@ -70,6 +70,29 @@ async function deleteMeme(name) {
   try {
     let imageData = new FormData();
     const formHeaders = imageData.getHeaders();
+    imageData.append("singlememe", name);
+    const deletedImage = await axios.post(
+      `${imageAPI}/deletememe.php`,
+      imageData,
+      {
+        headers: {
+          "Content-Type": formHeaders["content-type"],
+          ...formHeaders
+        }
+      }
+    );
+    
+    return deletedImage.data;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+}
+
+async function deleteAllMeme(name) {
+  try {
+    let imageData = new FormData();
+    const formHeaders = imageData.getHeaders();
     imageData.append("memes", name);
     const uploadedImage = await axios.post(
       `${imageAPI}/deleteallmeme.php`,
@@ -89,6 +112,7 @@ async function deleteMeme(name) {
 module.exports = {
   uploadProfilePicture,
   uploadMeme,
+  deleteMeme,
   deleteProfile,
-  deleteMeme
+  deleteAllMeme
 };

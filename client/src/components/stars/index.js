@@ -23,7 +23,7 @@ class Stars extends React.Component {
       <div id="stars">
         <SEO title="Trending memestars - memestars" />
         <Container>
-          <h1>top 5 memestars</h1>
+          <h1>memestars</h1>
           <Row>
             {this.state.stars.length
               ? this.state.stars.map((el, index) => {

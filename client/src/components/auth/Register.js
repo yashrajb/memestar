@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Form, FormGroup, Label, Input, Container } from "reactstrap";
+import { Button, Form, FormGroup, Label, Input, Container,Row,Col } from "reactstrap";
+import image from "../../assets/register-meme.jpg"
 import { withRouter } from 'react-router-dom';
 import {connect} from "react-redux";
 import {register} from "../../actions/auth";
@@ -73,12 +74,17 @@ class Register extends React.Component {
       <div className="auth">
       <SEO title="Register -  memestar"/>
         <Container>
-          <h1>Register</h1>
+          <Row>
+            <Col>
+            <img src={image} className="img-responsive" id="meme"/>
+            </Col>
+            <Col>
+            <h1>Register</h1>
           <Form onSubmit={this.onSubmit}>
             <FormGroup>
               <Label for="exampleName">Userame</Label>
               <Input type="text" name="username" id="username" value={this.state.name} onChange={this.onChange}/>
-              <p class="text-danger">{this.state.error.user?this.state.error.user:null}</p>
+              <p class="text-danger">{this.state.error.username?this.state.error.username:null}</p>
             </FormGroup>
             <FormGroup>
               <Label for="examplePassword">Password</Label>
@@ -92,6 +98,9 @@ class Register extends React.Component {
             </FormGroup>
             <Button name="submitBtn" disabled={this.state.disabledBtn}>Submit</Button>
           </Form>
+            </Col>
+          </Row>
+          
         </Container>
       </div>
     );

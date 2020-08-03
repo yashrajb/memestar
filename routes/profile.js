@@ -2,20 +2,19 @@ const router = require("express").Router();
 const passport = require("passport");
 const user = require("../models/user");
 const path = require("path");
-const {uploadProfilePicture,deleteMeme,deleteProfile} = require("../utils/image-api");
+const {uploadProfilePicture,deleteAllMeme,deleteProfile} = require("../utils/image-api");
 const meme = require("../models/meme");
-var imageDir = path.resolve(__dirname, "..", "images", "profile-pic");
-
-router.get("/:username", async (req, res) => {
+router.get("/:username",async (req, res) => {
   try {
-    let userResult = await user.findOne({ username: req.params.username });
+    let userResult = await user.findOne({ username: req.params.username },{_id:1,image:1,username:1,bio:1});
     if (userResult) {
       const { image, _id, username, bio } = userResult;
-      return res.send({ profile: { image, _id, username, bio } }).status(200);
+      return res.send({ profile: { image, _id, username, bio }}).status(200);
     } else {
       throw new Error();
     }
   } catch (e) {
+    console.log(e)
     return res.send({ error: "something happened wrong" }).status(400);
   }
 });
@@ -104,7 +103,7 @@ router.post(
      let memes = await meme.getAllMemesOfUser(req.user._id);
      if(memes.length){
       memes = JSON.stringify(memes);
-      await deleteMeme(memes); 
+      await deleteAllMeme(memes); 
      }
       await meme.deleteMany({ user_id: req.user._id });
       await user.findByIdAndDelete(req.user._id);

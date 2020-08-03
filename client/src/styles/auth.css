@@ -2,40 +2,44 @@
   padding:100px 0px;
   height:100%;
   margin-bottom:-900px;
-  text-align:center;
+}
+
+#meme {
+  width:300px;
 }
 
 .auth .container{
-  max-width:500px !important;
+  max-width:800px !important;
 }
 
 .auth h1 {
-color:#016670;
+color:black;
 text-shadow:3px 3px 3px lightgrey;
 }
 
 .auth input {
-border:1px solid #016670;
+border:1px solid black;
 box-shadow:3px 5px 3px lightgrey;
 border-radius:0px;
-border-color:#016670;
-outline-color:#016670;
+border-color:black;
+outline-color:black;
 }
 
 
 
 .auth label {
-color:#016670;
+color:black;
 }
 
 .auth .btn-secondary {
- background-color:#016670;
+  background:white;
  border:0px;
  outline:0px;
  border-radius:0px;
- box-shadow:3px 5px 3px lightgrey;
+ border:1px solid black;
+ color:black;
 }
 
 .auth .btn-secondary:hover {
-  background-color:#016670;
+  background-color:black;
 }

@@ -4,7 +4,7 @@ import {
   Collapse,
   Navbar,
   NavbarToggler,
-  NavbarBrand,
+  Container,
   Nav,
   NavItem,
   UncontrolledDropdown,
@@ -52,7 +52,7 @@ class Header extends React.Component {
             <Nav className="ml-auto" navbar>
               <NavItem>
                 <Link className="nav-link" to="/stars">
-                  Trending
+                  Stars
                 </Link>
               </NavItem>
               {this.props.auth.isAuthenticated ? (

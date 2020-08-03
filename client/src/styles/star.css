@@ -3,16 +3,16 @@
   padding:30px;
 }
 #stars h1 {
-  color:#016670;
+  color:black;
   text-transform: uppercase;
-  text-align:center;
   padding:20px;
+  text-align:center
 }
 .col {
   margin:20px 0px;
 }
-h6,h5 {
-  color:#016670;
+h6 a, h6 a:hover,h5 {
+  color:black;
   text-align:center;
 }
 .profile-pic {

@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Form, FormGroup, Label, Input, Container } from "reactstrap";
+import { Button, Form, FormGroup, Label, Input, Container, Row, Col } from "reactstrap";
+import image from "../../assets/log-in-meme.jpg"
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { login } from "../../actions/auth";
@@ -79,7 +80,12 @@ class Login extends React.Component {
       <div className="auth">
       <SEO title="Login - memestar"/>
         <Container>
-          <h1>Login</h1>
+          <Row>
+            <Col>
+            <img src={image} className="img-responsive" id="meme"/>
+            </Col>
+            <Col>
+            <h1>Login</h1>
           <Form onSubmit={this.onSubmit}>
             <p className="text-danger">{Object.entries(this.state.error).length>0 && this.state.error.user?this.state.error.user:""}</p>
             <FormGroup>
@@ -108,6 +114,9 @@ class Login extends React.Component {
             </FormGroup>
             <Button>Submit</Button>
           </Form>
+            </Col>
+          </Row>
+          
         </Container>
       </div>
     );

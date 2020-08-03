@@ -11,11 +11,11 @@ import Dashboard from "./components/dashboard";
 import uploadMeme from "./components/uploadMeme";
 import store from "./store/store";
 import {setUser,setHeaderToken,logout} from "./actions/auth";
+import Stars from "./components/stars/";
 import {currentProfile} from "./actions/profile";
 import Settings from "./components/settings";
 import EditProfile from "./components/Profile/EditProfile";
 import UserProfile from "./components/Profile/UserProfile";
-import Stars from "./components/stars";
 import "./App.css";
 
 function App() {
@@ -40,8 +40,8 @@ function App() {
         <Route exact path="/" component={Main} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
-        <Route exact path="/stars" component={Stars} />
         <Route exact path="/profile/:username" component={UserProfile} />
+        <Route exact path="/stars" component={Stars} />
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
         <PrivateRoute exact path="/upload" component={uploadMeme} />
         <PrivateRoute exact path="/edit" component={EditProfile} />

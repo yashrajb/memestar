@@ -3,7 +3,7 @@ const passport = require("passport");
 const { uploadMeme } = require("../utils/image-api");
 const meme = require("../models/meme");
 const users = require("../models/user");
-
+const { deleteMeme } = require("../utils/image-api");
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
@@ -20,13 +20,33 @@ router.post(
     }
     let newMeme = new meme({
       user_id: req.user.id,
+      createdAt: new Date(),
       image: uploadImage.image_new_name,
-      category: req.body.category
+      category: req.body.category,
     });
     newMeme
       .save()
-      .then(result => res.send(result).status(200))
-      .catch(err => res.send(err).status(400));
+      .then((result) => res.send(result).status(200))
+      .catch((err) => res.send(err).status(400));
+  }
+);
+
+router.delete(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      let { _id, image } = req.body;
+      let deletedMemes = await meme.findByIdAndDelete(_id);
+      if (deletedMemes) {
+        await deleteMeme(image);
+      }
+
+      return res.send({ success: true }).status(200);
+    } catch (e) {
+      console.log(e);
+      res.status(500).send({ error: "Something went wrong" });
+    }
   }
 );
 
@@ -37,12 +57,17 @@ router.get(
     meme
       .aggregate([
         {
+          $sort: {
+            createdAt: -1,
+          },
+        },
+        {
           $lookup: {
             from: "users",
             localField: "user_id",
             foreignField: "_id",
-            as: "userDetails"
-          }
+            as: "userDetails",
+          },
         },
         {
           $project: {
@@ -54,14 +79,14 @@ router.get(
               $filter: {
                 input: "$likes",
                 as: "likedUser",
-                cond: { $eq: ["$$likedUser.user", req.user._id] }
-              }
+                cond: { $eq: ["$$likedUser.user", req.user._id] },
+              },
             },
             count: {
-              $size: "$likes"
+              $size: "$likes",
             },
-            userDetails: "$userDetails"
-          }
+            userDetails: "$userDetails",
+          },
         },
         {
           $project: {
@@ -70,18 +95,18 @@ router.get(
             date: "$date",
             category: "$category",
             user_liked: {
-              $size: "$user_liked"
+              $size: "$user_liked",
             },
             count: "$count",
-            userDetails: "$userDetails"
-          }
-        }
+            userDetails: "$userDetails",
+          },
+        },
       ])
       .exec()
-      .then(result => {
+      .then((result) => {
         return res.send(result).status(200);
       })
-      .catch(err => res.send(err).status(400));
+      .catch((err) => res.send(err).status(400));
   }
 );
 
@@ -90,15 +115,15 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     let result = await meme.findById(req.params.id);
-    let isUserExist = result.likes.filter(element => {
+    let isUserExist = result.likes.filter((element) => {
       return element.user.toString() === req.user._id.toString();
     });
-    if(isUserExist.length){
-      result.likes = result.likes.filter(element => {
+    if (isUserExist.length) {
+      result.likes = result.likes.filter((element) => {
         return element.user.toString() !== req.user._id.toString();
       });
-    }else{
-      result.likes.push({user:req.user._id});
+    } else {
+      result.likes.push({ user: req.user._id });
     }
 
     let updated = await result.save();
@@ -107,54 +132,8 @@ router.post(
 );
 
 router.get("/username/:username", async (req, res) => {
-  meme
-  .aggregate([
-    {
-      $lookup: {
-        from: "users",
-        localField: "user_id",
-        foreignField: "_id",
-        as: "userDetails"
-      }
-    },
-    {
-      $project: {
-        _id: "$_id",
-        image: "$image",
-        date: "$date",
-        category: "$category",
-        user_liked: {
-          $filter: {
-            input: "$likes",
-            as: "likedUser",
-            cond: { $eq: ["$$likedUser.user", req.user._id] }
-          }
-        },
-        count: {
-          $size: "$likes"
-        },
-        userDetails: "$userDetails"
-      }
-    },
-    {
-      $project: {
-        _id: "$_id",
-        image: "$image",
-        date: "$date",
-        category: "$category",
-        user_liked: {
-          $size: "$user_liked"
-        },
-        count: "$count",
-        userDetails: "$userDetails"
-      }
-    }
-  ])
-  .exec()
-  .then(result => {
-    return res.send(result).status(200);
-  })
-  .catch(err => res.send(err).status(400));
+  let id = users.findOne({username:req.params.username},{_id:1});
+
 });
 
 router.get("/stars", (req, res) => {
@@ -165,8 +144,8 @@ router.get("/stars", (req, res) => {
           from: "memes",
           localField: "_id",
           foreignField: "user_id",
-          as: "memes"
-        }
+          as: "memes",
+        },
       },
       {
         $addFields: {
@@ -175,12 +154,12 @@ router.get("/stars", (req, res) => {
               $map: {
                 input: "$memes",
                 in: {
-                  $size: "$$this.likes"
-                }
-              }
-            }
-          }
-        }
+                  $size: "$$this.likes",
+                },
+              },
+            },
+          },
+        },
       },
       {
         $project: {
@@ -188,25 +167,25 @@ router.get("/stars", (req, res) => {
           user_id: "$_id",
           image: "$image",
           username: 1,
-          likes: 1
-        }
+          likes: 1,
+        },
       },
       {
-        $sort: { likes: -1 }
+        $sort: { likes: -1 },
       },
       {
-        $limit: 5
-      }
+        $limit: 5,
+      },
     ])
     .exec()
-    .then(result => {
+    .then((result) => {
       if (result.length) {
         return res.send(result).status(200);
       } else {
         return Promise.reject({ error: "there is no memestars" });
       }
     })
-    .catch(err => res.send(err).status(400));
+    .catch((err) => res.send(err).status(400));
 });
 
 module.exports = router;

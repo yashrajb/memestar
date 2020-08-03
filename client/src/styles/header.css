@@ -1,19 +1,25 @@
 .navbar {
 border-radius:0px;
 border:0px;
-background:#016670;
+box-shadow: 3px 3px 3px lightgrey;
 }
 
 
+.navbar-brand {
+               color:white;
+               padding:10px;
+               background:black;
+               text-transform:uppercase;
+               }
 
-.navbar-brand,.navbar-brand:hover {
+.navbar-brand:hover {
 color:white;
 text-transform:uppercase;
 }
 
 
 .navbar .nav-link a,.navbar-expand-md .navbar-nav .nav-link{
-color:white;
+color:black;
 }
 
 .navbar .dropdown-item {
@@ -22,23 +28,24 @@ color:white;
                padding: 0.25rem 1.5rem;
                clear: both;
                font-weight: 400;
-               color: white !important;
                text-align: inherit;
                white-space: nowrap;
                background-color: transparent;
                border: 0;
 }
 
-.navbar-expand-md .navbar-nav .dropdown-menu {
-background-color:#016670;      
-}
+
+
+button.dropdown-item,.navbar-expand-md .navbar-nav .dropdown-item a {
+               color:black !important;   
+               }
 
 .dropdown-divider {
 border-top:1px solid white;
 }
 
 .dropdown-item:focus, .dropdown-item:hover {
-               background-color:#016670 !important;
+               text-decoration: none !important;
 }
 
 .navbar-toggler-icon{

@@ -52,3 +52,20 @@ export const getStars = async () => {
   let stars = await axios.get(`/api/meme/stars`);
   return stars.data;
 };
+
+
+export const deleteMeme = (data,index) => dispatch => {
+  console.log(index);
+  axios.delete(`/api/meme/`,{data}).then((result) => {
+    dispatch({
+      type:"DELETE_MEME",
+      payload:index
+    })
+  })
+}
+
+export const userMeme = (data) => {
+
+return axios.get(`/api/username/${data}`)
+
+}
