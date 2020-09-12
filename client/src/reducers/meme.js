@@ -6,7 +6,6 @@ const initialState = {
 const memeReducer = function(state = initialState, action) {
   switch (action.type) {
     case "GET_MEMES":
-      console.log(state.meme,action.payload);
       let meme;
       if(action.filter){
         meme = action.payload

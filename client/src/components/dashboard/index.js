@@ -34,7 +34,6 @@ class DashboardIndex extends React.Component {
     });
   }
   onChangeFilter(value){
-    console.log(value,this.state.category);
     if(value===this.state.category){
       return;
     }
@@ -42,7 +41,7 @@ class DashboardIndex extends React.Component {
     this.setState({
       category:value     
     });
-    console.log(this.state.category);
+
     if(value!=="all"){
       obj.category = value
     }

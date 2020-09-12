@@ -73,7 +73,6 @@ class UserProfile extends React.Component {
             </Col>
           </Row>
           {this.props.memes.map((meme,index) => {
-            console.log("userProfile",meme);
             return <MemeView index={index} {...meme} />
           })}
           {this.props.memes.length?<p className="text-center">

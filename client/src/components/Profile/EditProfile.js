@@ -42,7 +42,6 @@ class EditProfile extends React.Component {
   }
     componentDidUpdate(prevProps,prevState){
       if(!prevProps.auth.profile.username && this.props.auth.profile.username){
-        console.log({skip:0,user_id:this.props.auth.user.id})
         this.props.getMemes({skip:0,user_id:this.props.auth.user.id})
         this.setState({
           username:this.props.auth.profile.username
@@ -263,7 +262,6 @@ class EditProfile extends React.Component {
             </Col>
         </Row>
         {this.props.memes.map((meme,index) => {
-            console.log("userProfile",meme);
             return <MemeView index={index} {...meme} />
           })}
         {this.props.memes.length?<p className="text-center">

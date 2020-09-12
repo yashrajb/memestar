@@ -9,7 +9,6 @@ export const upload = (form, history) => dispatch => {
       history.push("/");
     })
     .catch(err => {
-      console.log(err.response.data);
       dispatch(setError(err.response.data.error));
       setTimeout(() => {
         dispatch(clearError());
@@ -18,7 +17,6 @@ export const upload = (form, history) => dispatch => {
 };
 
 export const getMeme = ({skip,limit,user_id="",category=""},filter) => dispatch => {
-  console.log(skip,limit);
   dispatch(clearError());
   return axios
     .get(`/api/meme/all`,{params:{
@@ -28,7 +26,6 @@ export const getMeme = ({skip,limit,user_id="",category=""},filter) => dispatch 
       category
     }})
     .then(result => {
-      console.log(filter);
       dispatch(getMemes(result.data,filter));
       return result.data;
     })
@@ -74,7 +71,6 @@ export const getStars = async () => {
 
 
 export const deleteMeme = (data,index) => dispatch => {
-  console.log(index);
   axios.delete(`/api/meme/`,{data}).then((result) => {
     dispatch({
       type:"DELETE_MEME",

@@ -7,7 +7,6 @@ class Error extends React.Component {
     this.props = props;
   }
   render() {
-    console.log(this.props.error);
     return (
       <div className="text-center">
         {typeof this.props.error === "object" && this.props.error.length &&
@@ -29,7 +28,6 @@ class Error extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     auth: state.auth,
     error: state.error.errors,

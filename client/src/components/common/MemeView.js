@@ -117,7 +117,6 @@ export default connect(mapStateToProps, (dispatch) => {
       dispatch(LikeOrUnlikeMeme(id, index));
     },
     deleteMeme: (data, index) => {
-      console.log(index);
       dispatch(deleteMeme(data, index));
     },
   };

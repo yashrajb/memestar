@@ -7,8 +7,6 @@ const PrivateRoute = ({ component: Component, auth, ...rest }) => (
     {...rest}
     render={props => {
 
-
-      console.log(auth);
         if(localStorage.getItem("token")){
           return <Component {...props} />
         }else{
@@ -18,10 +16,6 @@ const PrivateRoute = ({ component: Component, auth, ...rest }) => (
           }}
         />
         }
-      
-
-
-
     }}
   />
 );

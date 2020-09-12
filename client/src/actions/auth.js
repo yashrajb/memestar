@@ -12,7 +12,6 @@ export const register = (form, history) => dispatch => {
       return result;
     })
     .catch(err => {
-      console.log(err.response.data);
       dispatch(setError(err.response.data.error));
       setTimeout(() => {
         dispatch(clearError());
