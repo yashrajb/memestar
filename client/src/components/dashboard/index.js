@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import {Container,Button,Input} from "reactstrap";
+import {Container,Button,ButtonGroup} from "reactstrap";
 import { getMeme } from "../../actions/meme";
 import DashboardMemeView from "../common/MemeView";
 import SEO from "../../utils/seo";
@@ -58,10 +58,12 @@ class DashboardIndex extends React.Component {
     return (
       <div className="dashboard">
       <SEO title="dashboard - memestars"/>
-        <Container>
-          <p className="text-center">{this.categories.map((category) => {
-            return <span className={`category ${this.state.category===category?"category__selected":''}`} onClick={() => this.onChangeFilter(category)}>{category} </span>
-          })}</p>
+        <Container className="text-center">
+         <ButtonGroup size="sm">
+          {this.categories.map((category) => {
+            return <Button active={this.state.category===category} tag="span" className={`category`} onClick={() => this.onChangeFilter(category)}>{category} </Button>
+          })}
+          </ButtonGroup>
           {this.props.memes.map((element, index) => {
             return <DashboardMemeView showProfileImage={true} showUsername={true} index={index} {...element} key={index} />;
           })}

@@ -49,14 +49,13 @@ border-top:1px solid white;
 }
 
 .navbar-toggler-icon{
-               background:black;
+               background:black !important;
                height:4px !important;
                display:block !important;
                margin:5px 0px;
 }
 
 .navbar-toggler {
-               background:black;
                border:1px solid white !important;
 }
 
