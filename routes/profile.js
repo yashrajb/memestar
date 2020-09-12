@@ -6,12 +6,12 @@ const {uploadProfilePicture,deleteAllMeme,deleteProfile} = require("../utils/ima
 const meme = require("../models/meme");
 router.get("/:username",async (req, res) => {
   try {
-    let userResult = await user.findOne({ username: req.params.username },{_id:1,image:1,username:1,bio:1});
+    let userResult = await user.findOne({ username: req.params.username });
     if (userResult) {
       const { image, _id, username, bio } = userResult;
-      return res.send({ profile: { image, _id, username, bio }}).status(200);
+      return res.send({ profile: {image,_id,username,bio}}).status(200);
     } else {
-      throw new Error();
+      return res.send({error:"user not found"}).status(400);
     }
   } catch (e) {
     console.log(e)
@@ -34,7 +34,10 @@ router.get(
         }
         return res.send(values).status(200);
       })
-      .catch(err => res.send(err).status(400));
+      .catch(err => {
+        console.log(err);
+        return res.send({error:"something went wrong"}).status(400)
+      });
   }
 );
 
@@ -61,7 +64,10 @@ router.post(
           return Promise.reject();
         }
       })
-      .catch(err => res.send(err).status(400));
+      .catch(err => {
+        console.log(err);
+        return res.status(400).send({error:"something went wrong"})
+      });
   }
 );
 
@@ -90,7 +96,8 @@ router.post(
       );
       return res.send(updatedUser).status(200);
     } catch (e) {
-      return res.send({ error: "Server Error" }).status(400);
+      console.log(e);
+      return res.status(400).send({ error: e.response && e.response.data?`${e.response.data.error}`:"something went wrong" });
     }
   }
 );
@@ -110,7 +117,7 @@ router.post(
       res.status(200).send();
     } catch (err) {
       console.log(err);
-      res.status(500).send({ error: "Server Error" });
+      res.status(500).send({ error: "something went wrong" });
     }
   }
 );

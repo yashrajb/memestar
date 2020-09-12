@@ -13,15 +13,14 @@ class Login extends React.Component {
     this.state = {
       username: "",
       password: "",
-      disabledBtn:false,
-      error: {}
+      disabledBtn:false
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
-      this.props.history.push("/dashboard");
+      this.props.history.push("/");
     }
   }
 
@@ -31,25 +30,12 @@ class Login extends React.Component {
         isAuthenticated: nextProps.auth.isAuthenticated
       };
     }
-
-    if (nextProps.errors) {
-      return {
-        errors: nextProps.errors
-      };
-    }
     return null;
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.auth.isAuthenticated === true) {
-      this.props.history.push("/dashboard");
-    }
-    if (prevProps.errors !== this.props.errors) {
-      this.setState(() => {
-        return {
-          error: this.props.errors
-        };
-      });
+      this.props.history.push("/");
     }
   }
 
@@ -60,19 +46,17 @@ class Login extends React.Component {
   onSubmit = e => {
     e.preventDefault();
     this.setState({
-      error:{},
       disabledBtn:true
     })
     const newUser = {
       username: this.state.username,
       password: this.state.password
     };
-    this.props.login(newUser, this.props.history);
-    setTimeout(() => {
+    this.props.login(newUser, this.props.history).then((result) => {
       this.setState({
-      disabledBtn:false
-    })
-  }, 2000)
+        disabledBtn:false
+      })
+    });
   };
 
   render() {
@@ -87,7 +71,6 @@ class Login extends React.Component {
             <Col>
             <h1>Login</h1>
           <Form onSubmit={this.onSubmit}>
-            <p className="text-danger">{Object.entries(this.state.error).length>0 && this.state.error.user?this.state.error.user:""}</p>
             <FormGroup>
               <Label for="username">Username</Label>
               <Input
@@ -96,9 +79,6 @@ class Login extends React.Component {
                 id="username"
                 onChange={this.onChange}
               />
-              <p className="text-danger">
-                {this.state.error.email ? this.state.error.email : null}
-              </p>
             </FormGroup>
             <FormGroup>
               <Label for="password">Password</Label>
@@ -108,9 +88,6 @@ class Login extends React.Component {
                 id="password"
                 onChange={this.onChange}
               />
-              <p className="text-danger">
-                {this.state.error.password ? this.state.error.password : null}
-              </p>
             </FormGroup>
             <Button>Submit</Button>
           </Form>
@@ -125,8 +102,7 @@ class Login extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    auth: state.auth,
-    errors: state.error.errors
+    auth: state.auth
   };
 };
 const mapDispatchToProps = dispatch => {

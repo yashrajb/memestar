@@ -8,15 +8,20 @@ function setProfile(profile) {
   };
 }
 
-export const getProfile = name => dispatch => {
+export const getProfile = (name,skip=0) => dispatch => {
   dispatch(clearError());
   return axios
-    .get(`/api/profile/${name}`)
+    .get(`/api/profile/${name}`,{params:{
+      skip:skip
+    }})
     .then(result => {
       return result.data.profile;
     })
     .catch(err => {
-      dispatch(setError(err.response.data));
+      dispatch(setError(err.response.data.error));
+      setTimeout(() => {
+        dispatch(clearError());
+      }, 4000);
     });
 };
 
@@ -26,7 +31,12 @@ export const changeProfile = file => dispatch => {
   .then((updated) => {
     dispatch(setProfile(updated.data));
   })
-  .catch((err) => dispatch(setError(err.response.data)));
+  .catch((err) => {
+    dispatch(setError(err.response.data.error))
+    setTimeout(() => {
+      dispatch(clearError());
+    }, 4000);
+  });
 }
 
 export const changeDetails = (detail,history) => dispatch => {
@@ -36,7 +46,10 @@ export const changeDetails = (detail,history) => dispatch => {
     dispatch(setProfile(updated.data));
     history.push(`/edit`);
   }).catch((err) => {
-    dispatch(setError(err.response.data))
+    dispatch(setError(err.response.data.error))
+    setTimeout(() => {
+      dispatch(clearError());
+    }, 4000);
   });
 }
 
@@ -46,6 +59,9 @@ export const currentProfile = () => dispatch => {
   .then((updated) => {
    dispatch(setProfile(updated.data));
   }).catch((err) => {
-    dispatch(setError(err.response.data));
+    dispatch(setError(err.response.data.error));
+    setTimeout(() => {
+      dispatch(clearError());
+    }, 4000);
   })
 }

@@ -1,6 +1,5 @@
 .profile .container:nth-child(1) {
                max-width:700px;
-               box-shadow:3px 3px 8px 3px grey;
                padding:30px;
                margin-top:20px;
 }
@@ -21,26 +20,29 @@ border:1px solid grey;
 margin-left:10px;
 }
 
-
-
-#profile {
+#profile img{
 max-width:250px;
+
 box-shadow:3px 3px 3px lightgrey;
 margin:0px auto;
-border:1px solid black;
-}
-
-#btn-submit {
-margin-left:10px;
+/*float:right;*/
 }
 
 #change-profile {
-margin-top:5px;
+               margin:10px 0px;
+               border-radius:0px;
+               }
+
+
+#btn-submit {
+margin-left:10px;
+border-radius:0px;
 }
 
-.renderChangedPic {
-width:200px;
-}
-h2 {
-               text-transform:uppercase;
+
+
+
+h4 {
+               text-transform:capitalize;
+               margin-left:20px;
 }

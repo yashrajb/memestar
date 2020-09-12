@@ -4,31 +4,44 @@ const { uploadMeme } = require("../utils/image-api");
 const meme = require("../models/meme");
 const users = require("../models/user");
 const { deleteMeme } = require("../utils/image-api");
+const ObjectId = require("mongoose").Types.ObjectId;
+const middleware = function(req,res,next){
+  passport.authenticate("jwt",{session:false},function(err,user,info){
+    req.isAuthenticated = Boolean(user);
+    req.user = user;
+    next();
+  })(req,res,next)
+}
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    if (!req.files) {
-      return res.status(400).json({ error: "file is required" });
-    }
-    if (!req.body.category) {
-      return res.status(400).json({ error: "category is required" });
-    }
-    let uploadImage = await uploadMeme(req.files.meme);
-    if (uploadImage.status !== 200) {
-      return res.status(400).json({ error: "server error.please try again" });
-    }
-    let newMeme = new meme({
-      user_id: req.user.id,
-      createdAt: new Date(),
-      image: uploadImage.image_new_name,
-      category: req.body.category,
-    });
-    newMeme
-      .save()
-      .then((result) => res.send(result).status(200))
-      .catch((err) => res.send(err).status(400));
+    try {
+      if (!req.files) {
+        return res.status(400).json({ error: "file is required" });
+      }
+      if (!req.body.category) {
+        return res.status(400).json({ error: "category is required" });
+      }
+      let uploadImage = await uploadMeme(req.files.meme);
+      if (uploadImage.status !== 200) {
+        return res.status(400).json({ error: "server error.please try again" });
+      }
+      let newMeme = new meme({
+        user_id: req.user.id,
+        createdAt: new Date(),
+        image: uploadImage.image_new_name,
+        category: req.body.category,
+      });
+      newMeme
+        .save()
+        .then((result) => res.send(result).status(200))
+        .catch((err) => res.send(err).status(400));
+    }catch(e){
+      console.log("errr",e.response.data,e.response && e.response.data && e.response.data.error);
+      return res.status(400).send({error:e.response && e.response.data?`${e.response.data.error}`:"something went wrong"})
   }
+}
 );
 
 router.delete(
@@ -45,17 +58,37 @@ router.delete(
       return res.send({ success: true }).status(200);
     } catch (e) {
       console.log(e);
-      res.status(500).send({ error: "Something went wrong" });
+      res.status(400).send({ error:e.response && e.response.data?e.response.data.error:"something went wrong" });
     }
   }
 );
 
+
+
 router.get(
   "/all",
-  passport.authenticate("jwt", { session: false }),
+  //passport.authenticate("jwt", { session: false }),
+  middleware,
   (req, res) => {
+    let user = "";
+    if(req.user){
+      user = req.user._id
+    }
+    let {skip,user_id,category}  = req.query;
+    let obj = {};
+    skip = parseInt(skip);
+    if(user_id){
+      obj.user_id = ObjectId(user_id);
+    }
+    if(category){
+      obj.category = category;
+    }
+    console.log(obj);
     meme
       .aggregate([
+        {
+          $match:obj
+        },
         {
           $sort: {
             createdAt: -1,
@@ -79,7 +112,7 @@ router.get(
               $filter: {
                 input: "$likes",
                 as: "likedUser",
-                cond: { $eq: ["$$likedUser.user", req.user._id] },
+                cond: { $eq: ["$$likedUser.user", user] },
               },
             },
             count: {
@@ -101,12 +134,22 @@ router.get(
             userDetails: "$userDetails",
           },
         },
+        {
+          $skip:skip
+
+        },
+        {
+          $limit:2
+        }
       ])
       .exec()
       .then((result) => {
         return res.send(result).status(200);
       })
-      .catch((err) => res.send(err).status(400));
+      .catch(err => {
+        console.log(err);
+        return res.send({error:"something went wrong"}).status(400)
+      });
   }
 );
 
@@ -114,6 +157,7 @@ router.post(
   "/like/:id",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
+    try{
     let result = await meme.findById(req.params.id);
     let isUserExist = result.likes.filter((element) => {
       return element.user.toString() === req.user._id.toString();
@@ -128,13 +172,12 @@ router.post(
 
     let updated = await result.save();
     return res.send(updated).status(200);
+  }catch(e){
+      console.log(e);
+      return res.send({error:"something went wrong"}).status(400)
+  }
   }
 );
-
-router.get("/username/:username", async (req, res) => {
-  let id = users.findOne({username:req.params.username},{_id:1});
-
-});
 
 router.get("/stars", (req, res) => {
   users
@@ -179,13 +222,32 @@ router.get("/stars", (req, res) => {
     ])
     .exec()
     .then((result) => {
-      if (result.length) {
         return res.send(result).status(200);
-      } else {
-        return Promise.reject({ error: "there is no memestars" });
-      }
     })
-    .catch((err) => res.send(err).status(400));
+    .catch(err => {
+      console.log(err);
+      return res.send({error:"something went wrong"}).status(400)
+    });
 });
 
+// router.get("/username/:user_id",async (req,res) => {
+// try {
+//   let {skip,limit,category} = req.query;
+//   skip = parseInt(skip);
+//   limit = parseInt(limit);
+//   let {user_id} = req.params;
+//   let obj = {
+//     user_id
+//   }
+//   if(category){
+//     obj.category = category;
+//   }
+//   let memes = await meme.find(obj).skip(skip).limit(limit);
+//   return res.send(memes).status(200);
+// }catch(e){
+//   console.log(e);
+//   return res.send({error:"something went wrong"}).status(400)
+// }
+
+// })
 module.exports = router;

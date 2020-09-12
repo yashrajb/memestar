@@ -5,13 +5,18 @@ import { currentProfile } from "./profile";
 import {getMemes} from "./meme";
 export const register = (form, history) => dispatch => {
   dispatch(clearError());
-  axios
+  return axios
     .post(`/api/users/register`, form)
     .then(result => {
       history.push("/login");
+      return result;
     })
     .catch(err => {
-      dispatch(setError(err.response.data));
+      console.log(err.response.data);
+      dispatch(setError(err.response.data.error));
+      setTimeout(() => {
+        dispatch(clearError());
+      }, 4000);
     });
 };
 
@@ -32,7 +37,7 @@ export const setHeaderToken = token => {
 
 export const login = form => dispatch => {
   dispatch(clearError());
-  axios
+ return axios
     .post(`/api/users/login`, form)
     .then(result => {
       let { token } = result.data;
@@ -41,10 +46,14 @@ export const login = form => dispatch => {
       setHeaderToken(token);
       dispatch(setUser(jwtDecodedToken));
       dispatch(currentProfile());
+      return result;
     })
     .catch(err => {
       if(err.response.data){
-        dispatch(setError(err.response.data));
+        dispatch(setError(err.response.data.error));
+        setTimeout(() => {
+          dispatch(clearError());
+        }, 4000);
       }
     });
 };
@@ -72,7 +81,10 @@ export const changePassword = passwordObj => dispatch => {
       dispatch(logout());
     })
     .catch(err => {
-      dispatch(setError(err.response.data));
+      dispatch(setError(err.response.data.error));
+      setTimeout(() => {
+        dispatch(clearError());
+      }, 4000);
     });
 };
 
@@ -81,7 +93,10 @@ export const deleteAccount = () => dispatch => {
   axios.post(`/api/profile/deleteaccount`).then((result) => {
     dispatch(logout());
   }).catch(err => {
-    dispatch(setError(err.response.data));
+    dispatch(setError(err.response.data.error));
+    setTimeout(() => {
+      dispatch(clearError());
+    }, 4000);
   });
 }
 

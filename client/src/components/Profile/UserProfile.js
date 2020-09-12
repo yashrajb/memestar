@@ -1,9 +1,11 @@
 import React from "react";
-import { Container } from "reactstrap";
+import { Container,Row,Col,Button } from "reactstrap";
 import { connect } from "react-redux";
 import { getProfile } from "../../actions/profile";
+import { getMeme } from "../../actions/meme";
 import "../../styles/profile.css";
 import SEO from "../../utils/seo";
+import MemeView from "../common/MemeView";
 class UserProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -11,7 +13,9 @@ class UserProfile extends React.Component {
     this.state = {
       username: "",
       image: "",
-      bio: ""
+      bio: "",
+      _id:"",
+      loading:false
     };
   }
   static getDerivedStateFromProps(props, state) {
@@ -20,32 +24,62 @@ class UserProfile extends React.Component {
       props.auth.isAuthenticated &&
       props.auth.profile.username === username
     ) {
-      props.history.push("/edit");
+     return props.history.push("/edit");
     }
+    return false;
   }
   componentDidMount() {
     let { username } = this.props.match.params;
     this.props.profile(username).then(result => {
-      this.setState({
-        ...result
-      });
+        this.props.getMemes({skip:0,limit:2,user_id:result._id});
+        this.setState({
+          loading:false,
+          ...result
+        });
     });
+  }
+
+  handleFetch(){
+    this.setState({
+      loading:true
+    },() => {
+        this.props.getMemes({skip:this.props.memes.length,limit:2,user_id:this.state._id}).then((result) => {
+          this.setState({
+            loading:false
+          })
+        });
+    })
+  }
+  componentWillUnmount(){
+    this.props.clearMemes();
   }
   render() {
     return (
       <div class="profile">
       <SEO title={`${this.state.username} - profile - memestars`}/>
         <Container>
-          <h2>profile</h2>
-          <div>
-            <img
-              src={`${process.env.REACT_APP_IMAGE_API}/profile-pic/${this.state.image}`}
-              alt="profile"
-              id="profile"
-            />
-            <h4 id="username">username:{this.state.username}</h4>
-            <p id="bio">bio:{this.state.bio}</p>
-          </div>
+          <h4>profile</h4>
+          <Row>
+            <Col>
+              <img
+                src={`${process.env.REACT_APP_IMAGE_API}/profile-pic/${this.state.image}`}
+                alt="profile"
+                id="profile"
+              />
+            </Col>
+            <Col>
+            <h6 id="username"> Username: {this.state.username}</h6>
+            <h6 id="bio"> About: {this.state.bio}</h6>
+            </Col>
+          </Row>
+          {this.props.memes.map((meme,index) => {
+            console.log("userProfile",meme);
+            return <MemeView index={index} {...meme} />
+          })}
+          {this.props.memes.length?<p className="text-center">
+            <Button style={{background:"black"}} onClick={() => this.handleFetch()}>{this.state.loading?"Loading...":"Load More"}
+            </Button>
+          </p>:null}
         </Container>
       </div>
     );
@@ -59,7 +93,11 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    profile: name => dispatch(getProfile(name))
+    profile: (name) => dispatch(getProfile(name)),
+    getMemes: (obj) => dispatch(getMeme(obj)),
+    clearMemes:() => dispatch({
+      type:"CLEAR_MEMES"
+    })
   };
 };
 export default connect(

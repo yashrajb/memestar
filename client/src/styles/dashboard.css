@@ -1,65 +1,21 @@
 .dashboard .container {
   max-width:500px !important;
+  height:100%;
+  -webkit-overflow-scrolling: touch;
 }
 .dashboard {
   padding: 30px 0px;
+  height:100%;
+  -webkit-overflow-scrolling: touch;
 }
 
-.dashboard .panel {
-  box-shadow: 3px 3px 3px lightgrey;
-  padding: 20px;
-  border:1px solid lightgrey;
-  max-width:500px !important;
-  margin:30px 0px;
+.dashboard .category {
+  box-shadow:2px 2px 5px 1px lightgrey;
+  margin-right:10px;
+  padding:7px;
+  border-radius:20px;
+  cursor:pointer;
 }
-
-.dashboard .profile-pic {
-  width: 50px;
-  height:55px;
-  border-radius:50px;
-}
-
-.dashboard .username a{
-  color: black !important;
-  margin-left: 10px;
-  text-transform: uppercase;
-}
-
-
-.dashboard .username a:hover{
-  text-decoration:none;
-}
-
-.dashboard .meme {
-  max-width:350px;
-  margin: 0px auto;
-  display: block;
-  border-width:0px;
-  box-shadow: 3px 3px 3px lightgrey;
-}
-.dashboard .panel .like-section{
-  text-align:center;
-  color:black;
-  text-align:center;
-}
-.dashboard .panel .fa.fa-thumbs-up,.fa.fa-thumbs-o-up{
-  font-size:26px;
-}
-.dashboard .like_count {
-  font-size:20px;
-}
-.dashboard .fa-trash-o {
-  color:rgb(187, 53, 53);
-  font-size:23px;
-  margin-top:13px;
-}
-button.dropdown-toggle,button.dropdown-toggle:hover{
-  background:transparent !important;
-  color:black !important;
-  border:0px !important;
-  font-size:23px;
-  outline:0px !important;
-}
-.show>.btn-secondary.dropdown-toggle:focus {
-  box-shadow:0px 0px 0px !important;
+.dashboard .category__selected {
+  box-shadow:1px 1px 1px 1px lightgrey;
 }

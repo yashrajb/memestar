@@ -9,18 +9,19 @@ const validateLoginInput = require("../validations/login");
 const user = require("../models/user");
 
 router.post("/register", (req, res) => {
-  const { errors, isValid } = validateRegisterInput(req.body);
-
-  if (!isValid) {
-    return res.status(400).json(errors);
+  console.log(req.body);
+  const { errors, anyErrors } = validateRegisterInput(req.body);
+  console.log(anyErrors);
+  if (anyErrors) {
+    return res.status(400).json({error:errors});
   }
-
+  console.log("after valid");
   user
     .findOne({ username: req.body.username })
     .then(result => {
       if (result) {
-        errors.user = "username already exists";
-        return res.status(400).json(errors);
+        //errors.user = "username already exists";
+        return res.status(400).json({error:"username already exists"});
       } else {
         let newUser = new user({
           username: req.body.username,
@@ -42,15 +43,15 @@ router.post("/register", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-  let { errors, isValid } = validateLoginInput(req.body);
-  if (!isValid) {
-    return res.status(400).json(errors);
+  let { errors, anyErrors } = validateLoginInput(req.body);
+  if (anyErrors) {
+    return res.status(400).json({error:errors});
   }
   user
     .findOne({ username: req.body.username })
     .then(result => {
       if (!result) {
-        return res.status(400).json({ user: "user is not found" });
+        return res.status(400).json({ error: "user is not found" });
       }
       bcrypt
         .compare(req.body.password, result.password)
@@ -73,8 +74,8 @@ router.post("/login", (req, res) => {
                 .json({ success: true, token: "Bearer " + token });
             });
           } else {
-            errors.password = "Password incorrect";
-            return res.status(400).json(errors);
+            errors.push("Password incorrect");
+            return res.status(400).json({error:errors});
           }
         })
         .catch(err => Promise.reject(err));
@@ -114,7 +115,7 @@ router.post(
       .then(result => {
         bcrypt.compare(req.body.newPassword,result.password).then((isSame) => {
           if(isSame){
-           return res.status(400).send({changepassword:"new password is same"}); 
+           return res.status(400).send({error:"new password is same"}); 
           }
         })
         bcrypt
@@ -134,15 +135,18 @@ router.post(
                 });
               });
             } else {
-              return Promise.reject({changepassword:"Current Password is wrong"});
+              return Promise.reject({error:"Current Password is wrong"});
             }
           })
-          .catch(err =>
-            res.status(400).send(err)
+          .catch(err =>{
+            console.log(err);
+            return res.status(400).send({error:"something went wrong"})
+          }
+            
           );
       })
       .catch(err =>
-        res.status(400).send({ changepassword: "something happened wrong.please try again" })
+        res.status(400).send({ error: "something happened wrong.please try again" })
       );
   }
 );

@@ -63,12 +63,6 @@ class Header extends React.Component {
                     </DropdownToggle>
                     <DropdownMenu right>
                       <DropdownItem>
-                        <Link to="/stars">Stars</Link>
-                      </DropdownItem>
-                      <DropdownItem>
-                        <Link to="/dashboard">Dashboard</Link>
-                      </DropdownItem>
-                      <DropdownItem>
                         <Link to="/upload">Upload Meme</Link>
                       </DropdownItem>
                       <DropdownItem>

@@ -14,36 +14,17 @@ class Register extends React.Component {
       username:"",
       password:"",
       password2:"",
-      disabledBtn:false,
-      error:{}
+      disabledBtn:false
     }
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
-      this.props.history.push('/dashboard');
+      this.props.history.push('/');
     }
   }
 
-  static getDerivedStateFromProps(nextProps, prevState){
-      if(nextProps.errors){
-        return {
-          errors:nextProps.errors
-        }
-      }
-      return null;
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if(prevProps.errors!==this.props.errors){
-      this.setState(() => {
-        return {
-          error:this.props.errors
-        }
-      });
-    }
-  }
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -52,20 +33,18 @@ class Register extends React.Component {
   onSubmit = e => {
     e.preventDefault();
     this.setState({
-      disabledBtn:true,
-      error:{}
+      disabledBtn:true
     })
     const newUser = {
       username: this.state.username,
       password: this.state.password,
       password2: this.state.password2
     };
-    this.props.registerUser(newUser, this.props.history);
-    setTimeout(() => {
+    this.props.registerUser(newUser, this.props.history).then((result) => {
       this.setState({
-      disabledBtn:false
+        disabledBtn:false
+      })
     })
-  }, 1000)
   }
 
 
@@ -84,17 +63,14 @@ class Register extends React.Component {
             <FormGroup>
               <Label for="exampleName">Userame</Label>
               <Input type="text" name="username" id="username" value={this.state.name} onChange={this.onChange}/>
-              <p class="text-danger">{this.state.error.username?this.state.error.username:null}</p>
             </FormGroup>
             <FormGroup>
               <Label for="examplePassword">Password</Label>
               <Input type="password" name="password" value={this.state.password} id="password" onChange={this.onChange}/>
-              <p class="text-danger">{this.state.error.password?this.state.error.password:null}</p>
             </FormGroup>
             <FormGroup>
               <Label for="examplePassword">Retype Password</Label>
               <Input type="password" name="password2" value={this.state.password2} id="password2" onChange={this.onChange}/>
-              <p class="text-danger">{this.state.error.password2?this.state.error.password2:null}</p>
             </FormGroup>
             <Button name="submitBtn" disabled={this.state.disabledBtn}>Submit</Button>
           </Form>
@@ -109,8 +85,7 @@ class Register extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    auth:state.auth,
-    errors:state.error.errors
+    auth:state.auth
   }
 }
 const mapDispatchToProps = (dispatch) => {

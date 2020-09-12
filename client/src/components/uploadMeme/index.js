@@ -63,10 +63,6 @@ class uploadMeme extends React.Component {
     data.append("meme", this.state.meme);
     data.append("category", this.state.category);
     this.props.uploadMeme(data,this.props.history);
-    setTimeout(() => this.setState({
-      error:{},
-      disabledBtn:false
-    }),2000);
   }
 
   onChangeFile(e) {

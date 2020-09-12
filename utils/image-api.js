@@ -39,6 +39,7 @@ async function uploadMeme(file) {
     );
     return uploadedImage.data;
   } catch (e) {
+    console.log(e);
     throw e;
   }
 }

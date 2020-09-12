@@ -6,29 +6,45 @@ export const upload = (form, history) => dispatch => {
   axios
     .post(`/api/meme/`, form)
     .then(result => {
-      history.push("/dashboard");
+      history.push("/");
     })
     .catch(err => {
-      dispatch(setError(err.response.data));
+      console.log(err.response.data);
+      dispatch(setError(err.response.data.error));
+      setTimeout(() => {
+        dispatch(clearError());
+      }, 4000);
     });
 };
 
-export const getMeme = () => dispatch => {
+export const getMeme = ({skip,limit,user_id="",category=""},filter) => dispatch => {
+  console.log(skip,limit);
   dispatch(clearError());
-  axios
-    .get(`/api/meme/all`)
+  return axios
+    .get(`/api/meme/all`,{params:{
+      skip,
+      limit:2,
+      user_id,
+      category
+    }})
     .then(result => {
-      dispatch(getMemes(result.data));
+      console.log(filter);
+      dispatch(getMemes(result.data,filter));
+      return result.data;
     })
     .catch(err => {
-      dispatch(setError(err.response.data));
+      dispatch(setError(err.response.data.error));
+      setTimeout(() => {
+        dispatch(clearError());
+      }, 4000);
     });
 };
 
-export const getMemes = meme => {
+export const getMemes = (meme,filter) => {
   return {
     type: "GET_MEMES",
-    payload: meme
+    payload: meme,
+    filter
   };
 };
 
@@ -44,7 +60,10 @@ export const LikeOrUnlikeMeme = (memeIndex, id) => dispatch => {
     .post(`/api/meme/like/${id}`)
     .then(res => dispatch(updateLike(memeIndex)))
     .catch(err => {
-      dispatch(setError(err.response.data));
+      dispatch(setError(err.response.data.error));
+      setTimeout(() => {
+        dispatch(clearError());
+      }, 4000);
     });
 };
 
@@ -62,10 +81,4 @@ export const deleteMeme = (data,index) => dispatch => {
       payload:index
     })
   })
-}
-
-export const userMeme = (data) => {
-
-return axios.get(`/api/username/${data}`)
-
 }

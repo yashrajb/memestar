@@ -4,10 +4,10 @@ import PrivateRoute from "./utils/PrivateRoute";
 import jwt_decode from "jwt-decode";
 import { Provider } from "react-redux";
 import Header from "./components/layout/Header";
-import Main from "./components/Main";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Dashboard from "./components/dashboard";
+import Error from "./components/error";
 import uploadMeme from "./components/uploadMeme";
 import store from "./store/store";
 import {setUser,setHeaderToken,logout} from "./actions/auth";
@@ -35,14 +35,16 @@ function App() {
 
   return (
     <Provider store={store}>
+      
       <Router>
+      
         <Header />
-        <Route exact path="/" component={Main} />
+        <Error />
+        <Route exact path="/" component={Dashboard} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
         <Route exact path="/profile/:username" component={UserProfile} />
         <Route exact path="/stars" component={Stars} />
-        <PrivateRoute exact path="/dashboard" component={Dashboard} />
         <PrivateRoute exact path="/upload" component={uploadMeme} />
         <PrivateRoute exact path="/edit" component={EditProfile} />
         <PrivateRoute exact path="/settings" component={Settings} />

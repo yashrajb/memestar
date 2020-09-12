@@ -10,13 +10,16 @@ import {
   ModalFooter,
   FormText,
   Form,
-  Container
+  Container,
+  Row,
+  Col
 } from "reactstrap";
 import { changeDetails, changeProfile } from "../../actions/profile";
-import MemView from "../dashboard/MemeView";
+import { getMeme } from "../../actions/meme";
 import { withRouter } from 'react-router-dom';
 import "../../styles/profile.css";
 import SEO from "../../utils/seo";
+import MemeView from "../common/MemeView";
 class EditProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -28,8 +31,7 @@ class EditProfile extends React.Component {
       disabledBtn:false,
       changeProfilePicBtn:false,
       image: "",
-      error: {},
-      memes:[]
+      error: {}
     };
     this.props = props;
     this.onChange = this.onChange.bind(this);
@@ -40,6 +42,8 @@ class EditProfile extends React.Component {
   }
     componentDidUpdate(prevProps,prevState){
       if(!prevProps.auth.profile.username && this.props.auth.profile.username){
+        console.log({skip:0,user_id:this.props.auth.user.id})
+        this.props.getMemes({skip:0,user_id:this.props.auth.user.id})
         this.setState({
           username:this.props.auth.profile.username
         })
@@ -53,6 +57,7 @@ class EditProfile extends React.Component {
     }
   componentDidMount() {
     if(Object.entries(this.props.auth.profile).length){
+
       this.setState({
         username:this.props.auth.profile.username,
         bio:this.props.auth.profile.bio
@@ -85,6 +90,10 @@ class EditProfile extends React.Component {
     } else {
       this.setState({ meme: null, image: null });
     }
+  }
+
+  componentWillUnmount(){
+    this.props.clearMemes();
   }
 
   onChangeTheProfile(e) {
@@ -142,12 +151,24 @@ class EditProfile extends React.Component {
     })
   }
 
+  handleFetch(){
+    this.setState({
+      loading:true
+    },() => {
+        this.props.getMemes({skip:this.props.memes.length,user_id:this.props.auth.user.id}).then((result) => {
+          this.setState({
+            loading:false
+          })
+        });
+    })
+  }
+
   render() {
     return (
       <div class="profile">
       <SEO title={`${this.state.username} - profile - memestars`}/>
       <Container>
-        <h1>Edit Profile</h1>
+        {/* <h1>Edit Profile</h1> */}
         {this.state.error.error?<p className="text-danger">{this.state.error.error}</p>:null}
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
           <Form
@@ -177,21 +198,37 @@ class EditProfile extends React.Component {
             </ModalFooter>
           </Form>
         </Modal>
-        <div>
+        <Row>
+          <Col>
+            {/*  */}
+            
+            <div id="profile">
             <img
               src={`${process.env.REACT_APP_IMAGE_API}/profile-pic/${this.props.auth.profile.image}`}
               alt="profile"
               id="profile"
+              onClick={this.toggle}
             />
-            <p>
-              <Button
+            <Button
                 color="secondary"
+                size="sm"
                 id="change-profile"
                 onClick={this.toggle}
               >
                 Change Profile
               </Button>
-            </p>
+            </div>
+            
+              {/* <Button
+                color="secondary"
+                
+                onClick={this.toggle}
+              >
+                Change Profile
+              </Button> */}
+            
+            </Col>
+                <Col>
             <FormGroup>
               <Input
                 type="text"
@@ -216,14 +253,23 @@ class EditProfile extends React.Component {
                 color="success"
                 id="btn-submit"
                 type="submit"
+                size="sm"
                 disabled={this.state.disabledBtn}
                 onClick={this.onChangeTheDetails}
               >
                 Submit
               </Button>
             </FormGroup>
-        </div>
-
+            </Col>
+        </Row>
+        {this.props.memes.map((meme,index) => {
+            console.log("userProfile",meme);
+            return <MemeView index={index} {...meme} />
+          })}
+        {this.props.memes.length?<p className="text-center">
+            <Button style={{background:"black"}} onClick={() => this.handleFetch()}>{this.state.loading?"Loading...":"Load More"}
+            </Button>
+          </p>:null}
       </Container>
       </div>
     );
@@ -239,7 +285,12 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     profile: name => dispatch(changeProfile(name)),
-    details: (detail,history) => dispatch(changeDetails(detail,history))
+    details: (detail,history) => dispatch(changeDetails(detail,history)),
+    getMemes: (obj) => dispatch(getMeme(obj)),
+    clearMemes:() => dispatch({
+      type:"CLEAR_MEMES"
+    }),
+
   };
 };
 export default connect(

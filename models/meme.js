@@ -5,7 +5,8 @@ const {deleteMeme} = require("../utils/image-api");
 const memeSchema = new Schema({
   user_id: {
     type: objectId,
-    required: true
+    required: true,
+    ref:"users"
   },
   createdAt:{
     type:Date,
