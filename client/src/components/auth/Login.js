@@ -89,7 +89,7 @@ class Login extends React.Component {
                 onChange={this.onChange}
               />
             </FormGroup>
-            <Button>Submit</Button>
+            <Button disabled={this.state.disabledBtn}>Submit</Button>
           </Form>
             </Col>
           </Row>

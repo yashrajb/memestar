@@ -9,13 +9,13 @@ export const register = (form, history) => dispatch => {
     .post(`/api/users/register`, form)
     .then(result => {
       history.push("/login");
-      return result;
     })
     .catch(err => {
       dispatch(setError(err.response.data.error));
       setTimeout(() => {
         dispatch(clearError());
       }, 4000);
+      return err;
     });
 };
 
@@ -45,7 +45,6 @@ export const login = form => dispatch => {
       setHeaderToken(token);
       dispatch(setUser(jwtDecodedToken));
       dispatch(currentProfile());
-      return result;
     })
     .catch(err => {
       if(err.response.data){
@@ -54,6 +53,7 @@ export const login = form => dispatch => {
           dispatch(clearError());
         }, 4000);
       }
+      return err;
     });
 };
 

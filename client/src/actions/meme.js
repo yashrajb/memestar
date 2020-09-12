@@ -3,7 +3,7 @@ import { setError, clearError } from "../actions/error";
 
 export const upload = (form, history) => dispatch => {
   dispatch(clearError());
-  axios
+  return axios
     .post(`/api/meme/`, form)
     .then(result => {
       history.push("/");
@@ -13,6 +13,7 @@ export const upload = (form, history) => dispatch => {
       setTimeout(() => {
         dispatch(clearError());
       }, 4000);
+      return err;
     });
 };
 

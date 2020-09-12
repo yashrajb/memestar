@@ -62,7 +62,11 @@ class uploadMeme extends React.Component {
     let data = new FormData();
     data.append("meme", this.state.meme);
     data.append("category", this.state.category);
-    this.props.uploadMeme(data,this.props.history);
+    this.props.uploadMeme(data,this.props.history).then(() => {
+      this.setState({
+        disabledBtn:false
+      })
+    });
   }
 
   onChangeFile(e) {
@@ -117,7 +121,7 @@ class uploadMeme extends React.Component {
                 <option>Uncategorized</option>
               </Input>
             </FormGroup>
-            <Button>Submit</Button>
+            <Button disabled={this.state.disabledBtn}>Submit</Button>
           </Form>
         </Container>
       </div>
