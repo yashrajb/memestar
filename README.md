@@ -36,4 +36,5 @@ To store the profile picture and memes i written Rest API. this API is written i
 - clone this repository `git clone https://github.com/yashrajb/memestar.git`
 - go to directory and run `npm install` then go to `./client/` and run npm install
 - after that you can run this web app concurrently using `npm run dev`. you can also run servers separately
+- don't forget to run image api
 
