@@ -11,7 +11,7 @@ import Error from "./Components/Error";
 import uploadMeme from "./Components/uploadMeme";
 import store from "./store/store";
 import {setHeaderToken,logout} from "./actions/auth";
-import Stars from "./Components/stars/";
+import Stars from "./Components/stars/index";
 import Settings from "./Components/settings";
 import EditProfile from "./Components/Profile/EditProfile";
 import UserProfile from "./Components/Profile/UserProfile";
