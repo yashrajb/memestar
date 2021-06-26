@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Toast, ToastBody, ToastHeader } from "reactstrap";
+import { Toast  } from "react-bootstrap";
 import { connect } from "react-redux";
 class Error extends React.Component {
   constructor(props) {
@@ -7,30 +7,32 @@ class Error extends React.Component {
     this.props = props;
   }
   render() {
+    
     return (
-      <div className="text-center">
-        {typeof this.props.error === "object" && this.props.error.length &&
-          this.props.error.map((err,index) => {
-            return (
-              <Alert key={index} color="danger" style={{ padding: "5px" }}>
-                {err}
-              </Alert>
-            );
-          })}
-        {typeof this.props.error === "string" ? (
-          <Alert color="danger" style={{ padding: "5px" }}>
-            {this.props.error}
-          </Alert>
-        ) : null}
+      <div className="text-center" style={{
+        position: 'absolute',
+        top: 70,
+        right:30,
+        zIndex:10000
+      }}>
+        
+        { this.props.error.message?<Toast show={true} style={{background:this.props.error.type==="error"?"#e56e6e":"rgb(102 218 130)",color:"white"}} delay={3000} autohide>
+          <Toast.Body>{this.props.error.message}</Toast.Body>
+        </Toast>:null
+        }
+          
+         
+        
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => {
+  console.log(state.error);
   return {
     auth: state.auth,
-    error: state.error.errors,
+    error: state.error
   };
 };
 const mapDispatchToProps = (dispatch) => {
@@ -39,3 +41,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Error);
+

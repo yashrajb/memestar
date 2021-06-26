@@ -1,45 +1,37 @@
 const router = require("express").Router();
 const passport = require("passport");
-const { uploadMeme } = require("../utils/image-api");
 const meme = require("../models/meme");
 const users = require("../models/user");
-const { deleteMeme } = require("../utils/image-api");
+const { deleteImage,getSignedURL } = require("../services/awsService");
 const ObjectId = require("mongoose").Types.ObjectId;
-const middleware = function(req,res,next){
-  passport.authenticate("jwt",{session:false},function(err,user,info){
-    req.isAuthenticated = Boolean(user);
-    req.user = user;
-    next();
-  })(req,res,next)
-}
+const {isAuthenticated} = require("../middlewares/isAuthenticated");
+const { v4: uuid } = require('uuid');
+const path = require("path");
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     try {
-      if (!req.files) {
-        return res.status(400).json({ error: "file is required" });
+      
+      if(!req.body.imageURL){
+        return res.status(400).json({ error: "image url is required" });
       }
       if (!req.body.category) {
         return res.status(400).json({ error: "category is required" });
       }
-      let uploadImage = await uploadMeme(req.files.meme);
-      if (uploadImage.status !== 200) {
-        return res.status(400).json({ error: "server error.please try again" });
-      }
+      
       let newMeme = new meme({
         user_id: req.user.id,
         createdAt: new Date(),
-        image: uploadImage.image_new_name,
+        image: req.body.imageURL,
         category: req.body.category,
       });
-      newMeme
-        .save()
-        .then((result) => res.send(result).status(200))
-        .catch((err) => res.send(err).status(400));
-    }catch(e){
-      console.log("errr",e.response.data,e.response && e.response.data && e.response.data.error);
-      return res.status(400).send({error:e.response && e.response.data?`${e.response.data.error}`:"something went wrong"})
+      let result = await newMeme.save()
+      return res.send(result).status(200);
+       
+    }catch(err){
+      console.log("error inside POST /meme/",err);
+      return res.status(400).send({error:"something went wrong"})
   }
 }
 );
@@ -49,16 +41,14 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     try {
-      let { _id, image } = req.body;
-      let deletedMemes = await meme.findByIdAndDelete(_id);
-      if (deletedMemes) {
-        await deleteMeme(image);
-      }
-
+      let { _id } = req.body;
+      let userMeme = await meme.findByIdAndDelete(_id);
+      await deleteImage(userMeme.image);
+      await meme.findByIdAndDelete(_id);
       return res.send({ success: true }).status(200);
-    } catch (e) {
-      console.log(e);
-      res.status(400).send({ error:e.response && e.response.data?e.response.data.error:"something went wrong" });
+    } catch (err) {
+      console.log("error inside DELETE /meme/",err);
+      res.status(400).send({ error:"something went wrong" });
     }
   }
 );
@@ -67,23 +57,25 @@ router.delete(
 
 router.get(
   "/all",
-  //passport.authenticate("jwt", { session: false }),
-  middleware,
-  (req, res) => {
+  isAuthenticated,
+  async (req, res) => {
     let user = "";
     if(req.user){
       user = req.user._id
     }
-    let {skip,user_id,category}  = req.query;
+    let {skip=0,user_id,category}  = req.query;
     let obj = {};
     skip = parseInt(skip);
-    if(user_id){
-      obj.user_id = ObjectId(user_id);
-    }
-    if(category){
-      obj.category = category;
-    }
-    console.log(obj);
+    user_id && (
+      obj.user_id = ObjectId(user_id)
+    )
+    category && (
+      obj.category = category
+    )
+    
+
+    
+
     meme
       .aggregate([
         {
@@ -118,7 +110,7 @@ router.get(
             count: {
               $size: "$likes",
             },
-            userDetails: "$userDetails",
+            userDetails:{ $arrayElemAt: [ "$userDetails", 0 ] }
           },
         },
         {
@@ -131,7 +123,12 @@ router.get(
               $size: "$user_liked",
             },
             count: "$count",
-            userDetails: "$userDetails",
+            userDetails:{
+              "username":"$userDetails.username",
+              "_id":"$userDetails._id",
+              "image":"$userDetails.image"
+            }
+           
           },
         },
         {
@@ -144,10 +141,11 @@ router.get(
       ])
       .exec()
       .then((result) => {
+        
         return res.send(result).status(200);
       })
       .catch(err => {
-        console.log(err);
+        console.log("error inside GET /meme/all",err);
         return res.send({error:"something went wrong"}).status(400)
       });
   }
@@ -172,8 +170,8 @@ router.post(
 
     let updated = await result.save();
     return res.send(updated).status(200);
-  }catch(e){
-      console.log(e);
+  }catch(err){
+      console.log("error inside POST /like/:id",err);
       return res.send({error:"something went wrong"}).status(400)
   }
   }
@@ -225,29 +223,45 @@ router.get("/stars", (req, res) => {
         return res.send(result).status(200);
     })
     .catch(err => {
-      console.log(err);
+      console.log("error inside GET /stars",err);
       return res.send({error:"something went wrong"}).status(400)
     });
 });
 
-// router.get("/username/:user_id",async (req,res) => {
-// try {
-//   let {skip,limit,category} = req.query;
-//   skip = parseInt(skip);
-//   limit = parseInt(limit);
-//   let {user_id} = req.params;
-//   let obj = {
-//     user_id
-//   }
-//   if(category){
-//     obj.category = category;
-//   }
-//   let memes = await meme.find(obj).skip(skip).limit(limit);
-//   return res.send(memes).status(200);
-// }catch(e){
-//   console.log(e);
-//   return res.send({error:"something went wrong"}).status(400)
-// }
 
-// })
+
+
+
+
+router.post('/upload', passport.authenticate("jwt", { session: false }), 
+async (req, res) => {
+
+  try {
+
+    if(!req.body.name || !req.body.type){
+      return res.json({
+        success:false,
+        error:"required params are not present"
+      })
+    }
+  
+  
+    var key = `${req.user._id}/${uuid()}${path.extname(req.body.name)}`;
+    
+  
+    var signedURL = await getSignedURL(req.body.type,key);
+
+    return res.json({url:signedURL.url,key}).status(200);
+
+  }catch(err){
+      console.log("error inside GET meme/upload",err);
+      return res.send({error:"something went wrong"}).status(500)
+  }
+
+  
+
+
+
+});
+
 module.exports = router;

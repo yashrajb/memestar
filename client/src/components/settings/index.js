@@ -1,12 +1,9 @@
 import React from "react";
 import {
-  Container,
   Button,
-  Form,
-  FormGroup,
-  Label,
-  Input
-} from "reactstrap";
+  Form, Row, Col
+} from "react-bootstrap";
+import Container from "../../components/common/Container"
 import { connect } from "react-redux";
 import { changePassword,deleteAccount } from "../../actions/auth";
 import "../../styles/settings.css";
@@ -65,31 +62,32 @@ class Settings extends React.Component {
       <Container>
           <h3>Change Password</h3>
           <Form onSubmit={this.onSubmit}>
-            <p class="text-danger">{this.state.error.changepassword || ""}</p>
-            <FormGroup>
-              <Label for="currentPassword">Current Password</Label>
-              <Input
+
+            <Form.Group className="mb-3">
+              <Form.Label for="currentPassword">Current Password</Form.Label>
+              <Form.Control
                 type="password"
                 name="currentPassword"
                 id="currentPassword"
                 value={this.state.currentPassword}
                 onChange={this.onChange}
               />
-            </FormGroup>
-            <FormGroup>
-              <Label for="newPassword">New Password</Label>
-              <Input
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label for="newPassword">New Password</Form.Label>
+              <Form.Control
                 type="password"
                 name="newPassword"
-                id="newPassword"
                 onChange={this.onChange}
                 value={this.state.newPassword}
               />
-            </FormGroup>
-            <FormGroup>
+            </Form.Group>
+           
+           
               <Button
-                color="success"
-                size="md"
+                variant="dark"
+                className="mb-3"
+                type="submit"
                 disabled={
                   this.state.currentPassword && this.state.newPassword
                     ? false
@@ -98,15 +96,20 @@ class Settings extends React.Component {
               >
                 Submit
               </Button>
-            </FormGroup>
+            
+              
+            
           </Form>
 
-        <div className="deleteAccount">
+        <Form.Group as={Row} className="deleteAccount">
+          
           <h3>Delete Account</h3>
-          <Button color="danger" size="md" block onClick={this.DeleteAccount}>
+          <Button variant="danger" block size="md" onClick={this.DeleteAccount}>
             Delete Account
           </Button>
-        </div>
+         
+          
+        </Form.Group>
           </Container>
         </div>
       
@@ -117,8 +120,7 @@ class Settings extends React.Component {
 export default connect(
   state => {
     return {
-      auth: state.auth,
-      error: state.error.errors
+      auth: state.auth
     };
   },
   dispatch => {

@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import {Container,Button,ButtonGroup} from "reactstrap";
+import Container from "../common/Container";
+import {Button,ButtonGroup} from "react-bootstrap";
 import { getMeme } from "../../actions/meme";
 import DashboardMemeView from "../common/MemeView";
 import SEO from "../../utils/seo";
@@ -17,6 +18,7 @@ class DashboardIndex extends React.Component {
     }
   }
   componentDidMount() {
+  this.props.clearMemes();
    this.props.getMemes({skip:0,limit:2});
   }
   handleFetch(){
@@ -58,10 +60,10 @@ class DashboardIndex extends React.Component {
     return (
       <div className="dashboard">
       <SEO title="dashboard - memestars"/>
-        <Container className="text-center">
+        <Container>
          <ButtonGroup size="sm">
-          {this.categories.map((category) => {
-            return <Button active={this.state.category===category} tag="span" className={`category`} onClick={() => this.onChangeFilter(category)}>{category} </Button>
+          {this.categories.map((category,index) => {
+            return <Button key={index} active={this.state.category===category} tag="span" className={`category`} onClick={() => this.onChangeFilter(category)}>{category} </Button>
           })}
           </ButtonGroup>
           {this.props.memes.map((element, index) => {
@@ -72,6 +74,7 @@ class DashboardIndex extends React.Component {
               {this.state.loading?"Loading...":"Load More"}
             </Button>
           </p>):null}
+          
         </Container>
       </div>
     );

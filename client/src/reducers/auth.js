@@ -1,7 +1,7 @@
 const initialState = {
   isAuthenticated: false,
-  user: {},
-  profile: {},
+  
+  profile: localStorage.getItem("user_data")?JSON.parse(localStorage.getItem("user_data")):{},
   loading:true
 };
 
@@ -11,12 +11,6 @@ function authReducer(state = initialState, action) {
       return {
         ...state,
         isAuthenticated: Object.keys(action.payload).length ? true : false,
-        user: action.payload,
-        loading:false
-      };
-    case "SET_PROFILE":
-      return {
-        ...state,
         profile: action.payload,
         loading:false
       };

@@ -2,29 +2,16 @@ import React from "react";
 import { LikeOrUnlikeMeme, deleteMeme } from "../../actions/meme";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import {Card,Row,Col,DropdownButton,Dropdown} from "react-bootstrap";
 import "../../styles/memeview.css";
-import {
-  ButtonDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
+
 class DashboardMemeView extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
     this.like = this.like.bind(this);
-    this.state = {
-      dropdownopen: false,
-    };
   }
-  toggle() {
-    this.setState((prevState) => {
-      return {
-        dropdownopen: !prevState.dropdownopen,
-      };
-    });
-  }
+
   like() {
     this.props.like(this.props.index, this.props._id);
   }
@@ -34,56 +21,63 @@ class DashboardMemeView extends React.Component {
       this.props.index
     );
   }
-  header = () => (
-    <p>
-      {this.props.showProfileImage && this.props.showUsername ? (
+  header = () => {
+    
+    return (
+    
+    <>
+
+<Card.Body>
+{this.props.showProfileImage && this.props.showUsername ? (
         <>
-          <img
-            src={`${process.env.REACT_APP_IMAGE_API}/profile-pic/${this.props.userDetails[0].image}`}
+          <Card.Img variant="top" 
+            src={`${process.env.REACT_APP_IMAGE_API}${this.props.userDetails.image}`}
             className="profile-pic img-responsive"
             alt="user"
           />
           <span className="username">
-            <Link to={`/profile/${this.props.userDetails[0].username}`}>
-              {this.props.userDetails[0].username}
+            <Link to={`/profile/${this.props.userDetails.username}`}>
+              {this.props.userDetails.username}
             </Link>
           </span>
         </>
-      ) : null}
-      {this.props.auth.isAuthenticated &&
-      this.props.auth.user.id.toString() ===
-        this.props.userDetails[0]._id.toString() ? (
-        <div style={{ float: "right" }}>
-          <ButtonDropdown
-            isOpen={this.state.dropdownopen}
-            toggle={() => this.toggle()}
-          >
-            <DropdownToggle caret></DropdownToggle>
-            <DropdownMenu>
-              <DropdownItem onClick={() => this.deleteMeme()}>
-                <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
-              </DropdownItem>
-            </DropdownMenu>
-          </ButtonDropdown>
-        </div>
-      ) : null}
-    </p>
+      ) : null
+      
+  }
+  {
+        
+    this.props.auth.isAuthenticated && `${this.props.auth.profile._id}` === `${this.props.userDetails._id}`?(
+          <div style={{ float: "right" }}>
+          <DropdownButton id="dropdown-basic-button" title="">
+            <Dropdown.Item onClick={() => this.deleteMeme()}>
+              <i className="fa fa-trash-o" aria-hidden="true"></i> Delete
+            </Dropdown.Item>
+          </DropdownButton>
+
+          </div>
+        ):null
+        
+  }
+</Card.Body>
+      
+    </>
   );
+}
   render() {
     return (
       <div id="memeview">
-      <div className="panel">
-        {this.props.userDetails && this.props.userDetails.length
-          ? this.header()
-          : null}
-        <p>
-          <img
-            src={`${process.env.REACT_APP_IMAGE_API}/memes/${this.props.image}`}
-            className="meme"
-            alt="meme"
+
+  <Card style={{ width: '25rem' }}>
+  
+  { this.props.userDetails ? this.header() : null }
+  <Card.Body>
+          <Card.Img variant="top" 
+            src={`${process.env.REACT_APP_IMAGE_API}${this.props.image}`}
           />
-        </p>
-        <h5 className="text-center">{this.props.category}</h5>
+  </Card.Body>
+  <Card.Body>
+    <Card.Text>
+    <h5 className="text-center">{this.props.category}</h5>
         <p className="like-section">
           <span
             className={
@@ -98,8 +92,12 @@ class DashboardMemeView extends React.Component {
             }
           ></span>{" "}
           <span className="like_count">{`${this.props.count}`}</span>
-        </p>
-      </div>
+          </p>
+    </Card.Text>
+  </Card.Body>
+</Card>
+
+
       </div>
     );
   }

@@ -1,15 +1,9 @@
 import React from "react";
-import {
-  Container,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Button,
-  FormText
-} from "reactstrap";
+import Container from "../common/Container";
+import {Button,Form,FormText,Image,Row} from "react-bootstrap";
 import { connect } from "react-redux";
 import { upload } from "../../actions/meme";
+import {setMessage} from "../../actions/error";
 import { withRouter } from 'react-router-dom';
 import "../../styles/uploadmeme.css";
 import SEO from "../../utils/seo";
@@ -23,50 +17,19 @@ class uploadMeme extends React.Component {
     this.state = {
       meme: null,
       category: "offensive",
-      disabledBtn:false,
-      image: null,
-      error: {}
+      image: null
     };
   }
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.errors) {
-      return {
-        errors: nextProps.errors
-      };
-    }
-    return null;
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.errors !== this.props.errors) {
-      this.setState(() => {
-        return {
-          error: this.props.errors
-        };
-      });
-    }
-  }
-  
-  onSubmit(e) {
+ 
+  async onSubmit(e) {
     e.preventDefault();
     if(e.target.meme.files.length && e.target.meme.files[0].size > 300000){
-      return this.setState({
-        error:{
-          error:"File size is more than 300kb"
-        }
+      return this.props.setMessage({
+        message:"File should be less 300kb size. please upload new image",
+        type:"error"
       })
     }
-    this.setState({
-      disabledBtn:true
-    });
-    let data = new FormData();
-    data.append("meme", this.state.meme);
-    data.append("category", this.state.category);
-    this.props.uploadMeme(data,this.props.history).then(() => {
-      this.setState({
-        disabledBtn:false
-      })
-    });
+    this.props.uploadMeme(this.state,this.props.history)
   }
 
   onChangeFile(e) {
@@ -90,26 +53,25 @@ class uploadMeme extends React.Component {
       <SEO title="upload meme - memestars"/>
         <Container>
           <h2>Upload</h2>
-          <Form encType="multipart/form-data" onSubmit={this.onSubmit}>
-            <p className="text-danger">{this.state.error.error}</p>
-            <FormGroup>
-              <Label for="exampleFile">Meme</Label>
-              <Input
+          <Form encType="multipart/form-data" onSubmit={this.onSubmit} >
+            <Form.Group className="mb-3">
+              
+              <Form.File
                 type="file"
                 name="meme"
                 id="meme"
                 onChange={this.onChangeFile}
               />
               {this.state.image ? (
-                <img src={this.state.image} className="meme" alt="meme"/>
+                <div><Image thumbnail src={this.state.image} className="meme" alt="meme"/></div>
               ) : null}
-              <FormText color="muted">
+              <FormText muted style={{lineHeight:"20px"}}>
                 Before upload make sure file is png,jpg,gif and size is less than or equal to 300kb
               </FormText>
-            </FormGroup>
-            <FormGroup>
-              <Label for="exampleSelect">Select Category: </Label>
-              <Input
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label for="exampleSelect">Select Category: </Form.Label>
+              <Form.Control as="select"
                 type="select"
                 name="category"
                 id="category"
@@ -119,9 +81,12 @@ class uploadMeme extends React.Component {
                 <option>Dank</option>
                 <option>Programming</option>
                 <option>Uncategorized</option>
-              </Input>
-            </FormGroup>
-            <Button disabled={this.state.disabledBtn}>Submit</Button>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Button variant="dark" type="submit" disabled={this.state.image && this.state.category?false:true}>Submit</Button>
+            </Form.Group>
+            
           </Form>
         </Container>
       </div>
@@ -131,15 +96,12 @@ class uploadMeme extends React.Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    uploadMeme: (meme,history) => dispatch(upload(meme,history))
+    uploadMeme: (meme,history) => dispatch(upload(meme,history)),
+    setMessage: (message) => dispatch(setMessage(message))
   };
 };
-const mapStateToProps = state => {
-  return {
-    errors: state.error.errors
-  };
-};
+
 export default connect(
-  mapStateToProps,
+  undefined,
   mapDispatchToProps
 )(withRouter(uploadMeme));

@@ -1,11 +1,12 @@
 import React from "react";
-import { Container,Row,Col,Button } from "reactstrap";
+import {Image,Row,Col,Button} from "react-bootstrap";
+import Container from "../common/Container";
 import { connect } from "react-redux";
 import { getProfile } from "../../actions/profile";
 import { getMeme } from "../../actions/meme";
-import "../../styles/profile.css";
 import SEO from "../../utils/seo";
 import MemeView from "../common/MemeView";
+import "../../styles/profile.css";
 class UserProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -18,36 +19,42 @@ class UserProfile extends React.Component {
       loading:false
     };
   }
-  static getDerivedStateFromProps(props, state) {
-    let { username } = props.match.params;
+  
+  async componentDidMount() {
+    
+    let {props} = this;
+    let { username } = this.props.match.params;
     if (
       props.auth.isAuthenticated &&
       props.auth.profile.username === username
     ) {
+
      return props.history.push("/edit");
+
+    }else{
+
+      let result = await this.props.profile(username)
+      await this.props.getMemes({skip:0,limit:2,user_id:result._id});
+      this.setState({
+            loading:false,
+            ...result
+      });
+
     }
-    return false;
-  }
-  componentDidMount() {
-    let { username } = this.props.match.params;
-    this.props.profile(username).then(result => {
-        this.props.getMemes({skip:0,limit:2,user_id:result._id});
-        this.setState({
-          loading:false,
-          ...result
-        });
-    });
+    
+    
   }
 
   handleFetch(){
     this.setState({
       loading:true
-    },() => {
-        this.props.getMemes({skip:this.props.memes.length,limit:2,user_id:this.state._id}).then((result) => {
-          this.setState({
+    },async function(){
+        
+      let result = await this.props.getMemes({skip:this.props.memes.length,limit:2,user_id:this.state._id})
+      result && this.setState({
             loading:false
-          })
-        });
+      })
+        
     })
   }
   componentWillUnmount(){
@@ -55,21 +62,23 @@ class UserProfile extends React.Component {
   }
   render() {
     return (
-      <div class="profile">
+      <div className="profile">
       <SEO title={`${this.state.username} - profile - memestars`}/>
         <Container>
-          <h4>profile</h4>
+          
           <Row>
             <Col>
-              <img
-                src={`${process.env.REACT_APP_IMAGE_API}/profile-pic/${this.state.image}`}
+              <Image
+                src={`${process.env.REACT_APP_IMAGE_API}${this.state.image}`}
+                thumbnail
                 alt="profile"
                 id="profile"
+                className="img-responsive"
               />
             </Col>
             <Col>
-            <h6 id="username"> Username: {this.state.username}</h6>
-            <h6 id="bio"> About: {this.state.bio}</h6>
+            <p><h6><b>Username:</b> <span id="username"> {this.state.username}</span></h6></p>
+            <p><h6><b>About:</b> <span id="bio"> {this.state.bio}</span></h6></p>
             </Col>
           </Row>
           {this.props.memes.map((meme,index) => {

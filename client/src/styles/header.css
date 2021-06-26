@@ -2,25 +2,27 @@
 border-radius:0px;
 border:0px;
 box-shadow: 3px 3px 3px lightgrey;
+background:none!important;
 }
 
 
 .navbar-brand {
-               color:white;
+               color:white !important;
                padding:10px;
                background:black;
                text-transform:uppercase;
                }
 
 .navbar-brand:hover {
-color:white;
+color:white !important;
 text-transform:uppercase;
 }
 
 
 .navbar .nav-link a,.navbar-expand-md .navbar-nav .nav-link{
-color:black;
+color:rgba(0,0,0,.5) !important;
 }
+
 
 .navbar .dropdown-item {
                display: block;

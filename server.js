@@ -1,3 +1,4 @@
+
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -9,7 +10,6 @@ const upload = require('express-fileupload');
 const users = require("./routes/user");
 const profile = require("./routes/profile");
 const meme = require("./routes/meme");
-const db = require("./config/keys").mongoURI;
 const app = express();
 app.use(upload());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(cors());
 mongoose.set('useFindAndModify', false);
 mongoose
-  .connect(db, { useNewUrlParser: true })
+  .connect(process.env.MONGODB_URI, { useNewUrlParser: true,useUnifiedTopology: true })
   .then((result) => {
       console.log("mongodb is connected");
   })

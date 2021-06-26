@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Form, FormGroup, Label, Input, Container,Row,Col } from "reactstrap";
+import { Button, Form, Row,Col } from "react-bootstrap";
+import Container from "../common/Container";
 import image from "../../assets/register-meme.jpg"
 import { withRouter } from 'react-router-dom';
 import {connect} from "react-redux";
@@ -60,19 +61,19 @@ class Register extends React.Component {
             <Col>
             <h1>Register</h1>
           <Form onSubmit={this.onSubmit}>
-            <FormGroup>
-              <Label for="exampleName">Userame</Label>
-              <Input type="text" name="username" id="username" value={this.state.name} onChange={this.onChange}/>
-            </FormGroup>
-            <FormGroup>
-              <Label for="examplePassword">Password</Label>
-              <Input type="password" name="password" value={this.state.password} id="password" onChange={this.onChange}/>
-            </FormGroup>
-            <FormGroup>
-              <Label for="examplePassword">Retype Password</Label>
-              <Input type="password" name="password2" value={this.state.password2} id="password2" onChange={this.onChange}/>
-            </FormGroup>
-            <Button name="submitBtn" disabled={this.state.disabledBtn}>Submit</Button>
+            <Form.Group className="mb-3">
+              <Form.Label for="exampleName">Userame</Form.Label>
+              <Form.Control type="text" name="username" value={this.state.name} onChange={this.onChange}/>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label for="examplePassword">Password</Form.Label>
+              <Form.Control type="password" name="password" value={this.state.password} id="password" onChange={this.onChange}/>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label for="examplePassword">Retype Password</Form.Label>
+              <Form.Control type="password" name="password2" value={this.state.password2} id="password2" onChange={this.onChange}/>
+            </Form.Group>
+            <Button name="submitBtn" type="submit" disabled={this.state.disabledBtn} variant="dark">Submit</Button>
           </Form>
             </Col>
           </Row>

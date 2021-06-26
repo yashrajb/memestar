@@ -4,25 +4,18 @@
                margin-top:20px;
 }
 
-#editusername {
-border:1px solid grey;
-outline:0px;
-margin-left:10px;
-}
+
 
 #username{
 padding:0px;
 margin:0px;
 }
 
-#editbio {
-border:1px solid grey;
-margin-left:10px;
-}
+
 
 #profile img{
 max-width:250px;
-
+cursor:pointer;
 box-shadow:3px 3px 3px lightgrey;
 margin:0px auto;
 /*float:right;*/
@@ -34,10 +27,7 @@ margin:0px auto;
                }
 
 
-#btn-submit {
-margin-left:10px;
-border-radius:0px;
-}
+
 
 
 

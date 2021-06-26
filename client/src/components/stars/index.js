@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Container, Col, Row } from "reactstrap";
+import Container from "../common/Container";
+import { Card,Row,Col,DropdownButton,Dropdown } from "react-bootstrap";
 import { getStars } from "../../actions/meme";
 import "../../styles/star.css";
 import SEO from "../../utils/seo";
@@ -24,39 +25,49 @@ class Stars extends React.Component {
         <SEO title="Trending memestars - memestars" />
         <Container>
           <h1>memestars</h1>
-          <Row>
+          
             {this.state.stars.length
               ? this.state.stars.map((el, index) => {
                   return (
-                    <Col key={index}>
-                      <p className="text-center">
-                        <img
-                          src={`${process.env.REACT_APP_IMAGE_API}/profile-pic/${el.image}`}
+                    <Card key={index} style={{ width: '17rem' }}>
+                      <Card.Body>
+                        <Card.Img variant="top"
+                          src={`${process.env.REACT_APP_IMAGE_API}${el.image}`}
                           className="profile-pic img-responsive"
                           alt="memestar"
                         />
-                      </p>
-                      <h6>
-                        <Link
-                          className="nav-link"
-                          to={`/profile/${el.username}`}
-                        >
-                          {el.username}
-                        </Link>
-                      </h6>
-                      <h5>
-                        <span
-                          className="fa fa-thumbs-up"
-                          style={{ fontSize: "23px" }}
-                          onClick={this.like}
-                        ></span>{" "}
-                        {el.likes}
-                      </h5>
-                    </Col>
+                      </Card.Body>
+                      <Card.Body>
+                        
+                     
+                      
+                        <Card.Text>
+                          <h5>  
+
+                            <Link
+                            className="nav-link"
+                            to={`/profile/${el.username}`}
+                          >
+                            {el.username}
+                          </Link>
+
+                          </h5>
+                         
+                        
+                        <h6>
+                          
+                          <i className="fa fa-thumbs-up" style={{ fontSize: "23px" }}></i> {el.likes}
+                          
+                          </h6>
+                        
+                        </Card.Text>{" "}
+                        
+                      </Card.Body>
+                    </Card>
                   );
                 })
               : null}
-          </Row>
+          
         </Container>
       </div>
     );

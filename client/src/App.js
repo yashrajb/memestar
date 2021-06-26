@@ -7,24 +7,27 @@ import Header from "./components/layout/Header";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Dashboard from "./components/dashboard";
-import Error from "./components/error";
+import Error from "./components/Error";
 import uploadMeme from "./components/uploadMeme";
 import store from "./store/store";
-import {setUser,setHeaderToken,logout} from "./actions/auth";
+import {setHeaderToken,logout} from "./actions/auth";
 import Stars from "./components/stars/";
-import {currentProfile} from "./actions/profile";
 import Settings from "./components/settings";
 import EditProfile from "./components/Profile/EditProfile";
 import UserProfile from "./components/Profile/UserProfile";
-import "./App.css";
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "./App.css";
 function App() {
   useEffect(() => {
     if (localStorage.token) {
       setHeaderToken(localStorage.token);
       const decoded = jwt_decode(localStorage.token);
-      store.dispatch(setUser(decoded));
-      store.dispatch(currentProfile());
+      const profile = JSON.parse(localStorage.getItem("user_data"));
+      store.dispatch({
+        type:"SET_USER",
+        payload:profile
+      });
       const currentTime = Date.now() / 1000;
       if (decoded.exp < currentTime) {
         store.dispatch(logout());
@@ -35,7 +38,7 @@ function App() {
 
   return (
     <Provider store={store}>
-      
+
       <Router>
       
         <Header />

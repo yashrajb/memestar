@@ -1,12 +1,16 @@
-export const setError = (err) => {
+import store from "../store/store";
+export const setMessage = (err) => {
+               setTimeout(function(){
+                            store.dispatch(clearMessage());
+               },3000)
 return {
-type:"SET_ERROR",
+type:"SET_MESSAGE",
 payload:err
 }
 }
 
-export const clearError = () => {
+export const clearMessage = () => {
 return {
-type:"CLEAR_ERROR"
+type:"CLEAR_MESSAGE"
 }
 }

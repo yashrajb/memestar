@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const objectId = mongoose.Schema.Types.ObjectId;
-const {deleteMeme} = require("../utils/image-api");
+const {deleteMeme} = require("../services/awsService");
 const memeSchema = new Schema({
   user_id: {
     type: objectId,

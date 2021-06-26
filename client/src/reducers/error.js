@@ -1,17 +1,21 @@
 const initialState = {
-  errors: {}
+  message:'',
+  type:"error"
 };
 
 export default function errorReducer(state = initialState, action) {
   switch (action.type) {
-    case "SET_ERROR":
+    case "SET_MESSAGE":
+      let {message,type} = action.payload;
       return {
-        errors: action.payload
+        message,
+        type
       };
-    case "CLEAR_ERROR":
+    case "CLEAR_MESSAGE":
     return {
-      errors:{}
-    }
+          message:'',
+          type:'error'
+    };
     default:
       return state;
   }

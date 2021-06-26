@@ -1,17 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  Container,
-  Nav,
-  NavItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
-} from "reactstrap";
+import {Navbar,Nav,NavDropdown} from "react-bootstrap";
+import Container from "../common/Container";
 import { Link } from "react-router-dom";
 import "../../styles/header.css";
 import { logout } from "../../actions/auth";
@@ -37,64 +27,56 @@ class Header extends React.Component {
   render() {
     return (
       <div>
-        <Navbar expand="md">
-          <div>
-            <Link to="/" className="navbar-brand">
+        
+<Navbar collapseOnSelect expand="lg" className="justify-content-between">
+<Container>
+<Link to="/" className="navbar-brand">
               memestar
             </Link>
-          </div>
-          <NavbarToggler onClick={this.toggle}>
-            <span className="navbar-toggler-icon"></span>
-            <span className="navbar-toggler-icon"></span>
-            <span className="navbar-toggler-icon"></span>
-          </NavbarToggler>
-          <Collapse isOpen={this.state.isOpen} navbar>
-            <Nav className="ml-auto" navbar>
-              <NavItem>
-                <Link className="nav-link" to="/stars">
-                  Stars
-                </Link>
-              </NavItem>
-              {this.props.auth.isAuthenticated ? (
-                <NavItem>
-                  <UncontrolledDropdown nav inNavbar>
-                    <DropdownToggle nav caret>
-                      Hello, {this.props.auth.profile.username}
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                      <DropdownItem>
-                        <Link to="/upload">Upload Meme</Link>
-                      </DropdownItem>
-                      <DropdownItem>
-                        <Link to={`/edit`}>Profile</Link>
-                      </DropdownItem>
-                      <DropdownItem>
-                        <Link to={`/settings`}>Settings</Link>
-                      </DropdownItem>
-                      <DropdownItem onClick={this.onClickLogout}>
-                        Logout
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
-                </NavItem>
-              ) : null}
-              <NavItem>
-                {!this.props.auth.isAuthenticated ? (
-                  <Link className="nav-link" to="/register">
-                    Register
+  <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+  <Navbar.Collapse id="responsive-navbar-nav" className="justify-content-end">
+    
+    <Nav>
+      
+        <Link to="/stars" className="nav-link">
+                    Stars
                   </Link>
-                ) : null}
-              </NavItem>
-              <NavItem>
-                {!this.props.auth.isAuthenticated ? (
-                  <Link className="nav-link" to="/login">
-                    Login
+       
+      {this.props.auth.isAuthenticated ? (
+      <NavDropdown title={`Hello, ${this.props.auth.profile.username}`} id="collasible-nav-dropdown">
+      
+          <Link to="/upload" className="dropdown-item">Upload Meme</Link>
+        
+      
+          <Link to={`/edit`} className="dropdown-item">Profile</Link>
+        
+      
+          <Link to={`/settings`} className="dropdown-item">Settings</Link>
+        
+        <NavDropdown.Divider />
+        <NavDropdown.Item onClick={this.onClickLogout}>Logout</NavDropdown.Item>
+      </NavDropdown>):(
+
+        <>
+          
+          <Link className="nav-link" to="/register">
+                      Register
                   </Link>
-                ) : null}
-              </NavItem>
-            </Nav>
-          </Collapse>
-        </Navbar>
+          
+          
+            <Link className="nav-link" to="/login">Login</Link>
+          
+        </>
+
+      )}
+      <a href="https://yashrajb.github.io" target="_blank" className="nav-link">
+          About Developer
+      </a>
+    </Nav>
+  </Navbar.Collapse>
+  </Container>
+</Navbar>
+
       </div>
     );
   }

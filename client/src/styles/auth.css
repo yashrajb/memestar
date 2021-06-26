@@ -31,15 +31,6 @@ outline-color:black;
 color:black;
 }
 
-.auth .btn-secondary {
-  background:white;
- border:0px;
- outline:0px;
- border-radius:0px;
- border:1px solid black;
- color:black;
-}
-
-.auth .btn-secondary:hover {
-  background-color:black;
+.auth button {
+  border-radius:0px;
 }

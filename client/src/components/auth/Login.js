@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Form, FormGroup, Label, Input, Container, Row, Col } from "reactstrap";
+import { Button, Form, Row, Col } from "react-bootstrap";
+import Container from "../common/Container";
 import image from "../../assets/log-in-meme.jpg"
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -44,6 +45,7 @@ class Login extends React.Component {
   };
 
   onSubmit = e => {
+    
     e.preventDefault();
     this.setState({
       disabledBtn:true
@@ -53,7 +55,7 @@ class Login extends React.Component {
       password: this.state.password
     };
     this.props.login(newUser, this.props.history).then((result) => {
-      this.setState({
+       this.setState({
         disabledBtn:false
       })
     });
@@ -71,25 +73,24 @@ class Login extends React.Component {
             <Col>
             <h1>Login</h1>
           <Form onSubmit={this.onSubmit}>
-            <FormGroup>
-              <Label for="username">Username</Label>
-              <Input
+            <Form.Group className="mb-3">
+              <Form.Label for="username" >Username</Form.Label>
+              <Form.Control
                 type="text"
                 name="username"
-                id="username"
                 onChange={this.onChange}
               />
-            </FormGroup>
-            <FormGroup>
-              <Label for="password">Password</Label>
-              <Input
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label for="password">Password</Form.Label>
+              <Form.Control
                 type="password"
                 name="password"
-                id="password"
+                
                 onChange={this.onChange}
               />
-            </FormGroup>
-            <Button disabled={this.state.disabledBtn}>Submit</Button>
+            </Form.Group>
+            <Button disabled={this.state.disabledBtn} type="submit" variant="dark">Submit</Button>
           </Form>
             </Col>
           </Row>

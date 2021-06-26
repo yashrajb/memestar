@@ -8,17 +8,12 @@
   padding:20px;
   text-align:center
 }
-.col {
-  margin:20px 0px;
+.card {
+  float:left;
+  margin:20px 8px
 }
-h6 a, h6 a:hover,h5 {
-  color:black;
+h6,h5 a, h5 a:hover {
+  color:black !important;
   text-align:center;
 }
-.profile-pic {
-  width:100px;
-  height:100px;
-  border-radius:100px;
-  border:1px solid lightgrey;
-  box-shadow:3px 3px 3px solid lightgrey;
-}
+
