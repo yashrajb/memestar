@@ -3,7 +3,7 @@ import {
   Button,
   Form, Row, Col
 } from "react-bootstrap";
-import Container from "../../components/common/Container"
+import Container from "../../Components/common/Container"
 import { connect } from "react-redux";
 import { changePassword,deleteAccount } from "../../actions/auth";
 import "../../styles/settings.css";
