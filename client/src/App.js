@@ -6,13 +6,13 @@ import { Provider } from "react-redux";
 import Header from "./Components/layout/Header";
 import Login from "./Components/auth/Login";
 import Register from "./Components/auth/Register";
-import Dashboard from "./Components/dashboard";
+import Dashboard from "./Components/dashboard/index";
 import Error from "./Components/Error";
-import uploadMeme from "./Components/uploadMeme";
+import uploadMeme from "./Components/uploadMeme/index";
 import store from "./store/store";
 import {setHeaderToken,logout} from "./actions/auth";
 import Stars from "./Components/stars/index";
-import Settings from "./Components/settings";
+import Settings from "./Components/settings/index";
 import EditProfile from "./Components/Profile/EditProfile";
 import UserProfile from "./Components/Profile/UserProfile";
 
