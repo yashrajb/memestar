@@ -29,7 +29,6 @@ class Error extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.error);
   return {
     auth: state.auth,
     error: state.error

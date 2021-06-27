@@ -18,3 +18,8 @@
 .App-link {
   color: #09d3ac;
 }
+
+.dropdown-item:hover {
+  background:black !important;
+  color:white !important;
+}
