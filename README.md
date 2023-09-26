@@ -1,5 +1,5 @@
 # MEMESTAR
-memestar is the social media website where memers compete with other to become memestar on the basis of the likes. memestar accept all kind of memes like dank,offensive,programming and also uncategorized. also memers can build their profile.
+memestar is the social media website where memers compete with other to become memestar on the basis of the likes. memestar accept all kind of memes and also memers can build their profile.
 ---
 ![memestar image](https://github.com/yashrajb/yashrajb.github.io/blob/master/images/memestar-app-repo.png)
 
@@ -9,7 +9,7 @@ memestar is the social media website where memers compete with other to become m
 - Redux
 - Nodejs
 - Mongodb
-- PHP
+- AWS
 - Passport
 - Heroku
 - Git
