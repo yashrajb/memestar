@@ -15,21 +15,20 @@ memestar is the social media website where memers compete with other to become m
 - Git
 
 ## Memestar image API
-To store the profile picture and memes i written Rest API. this API is written in PHP. to run this webapp you need this API. take look [here](https://github.com/yashrajb/memestar-image-api) and understand how to run this API 
+To store the profile picture and memes i written AWS S3 service. you can see in `service` folder
 
 ## Configuring the environments variables
 -  There are three parameters in this project
 - `mongoURI` - mongodb database url
--  `secretOrKey`- secret key to making encryption stronger (salting)
+- `secretOrKey`- secret key to making encryption stronger (salting)
 - `imageAPI` - URL of memestar image api (read the above section to more)
+- `AWS_S3_ACCESS_KEY_ID` - AWS ACCESS KEY ID
+- `AWS_S3_SECRET_ACCESS_KEY` - AWS S3 SECRET ACCESS KEY
+- `AWS_S3_REGION` - AWS S3 Region
 
-- for local
-   - go to `/config` and create file `keys_dev.js`
-   - export object with those three keys 
-   - go to `/client`. you will find `.env.example` you can rename as .env.development whatever you like in that file you will find    `REACT_APP_IMAGE_API` where you have to put URL of image API
  
  - for producton
-    - in root create new `.env.production` and write those three parameters whicg listed above
+    - in root create new `.env.production` and put above variables
     - for client side you have to do same thing that you done in local but create file .env.production instead .env.development
 
 ## How to install and run this web app
